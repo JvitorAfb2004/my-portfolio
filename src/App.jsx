@@ -62,6 +62,7 @@ const DevPortfolio = () => {
           "Specialist in React, Vue and Node.js. I create custom, scalable and high-performance web systems and apps.",
         viewPortfolio: "VIEW PORTFOLIO",
         quote: "GET A QUOTE",
+        downloadCV: "DOWNLOAD CV",
         systemActive: "SYSTEM: ACTIVE",
         clients: "CLIENTS",
         satisfied: "15+ SATISFIED",
@@ -91,6 +92,8 @@ const DevPortfolio = () => {
         about: "// ABOUT THE PROJECT",
         tech: "// TECHNOLOGIES",
         close: "CLOSE",
+        visit: "VISIT PROJECT",
+        wantOne: "I WANT ONE LIKE THIS",
       },
       testimonials: {
         titlePrefix: "REAL",
@@ -141,6 +144,7 @@ const DevPortfolio = () => {
           "Especialista em React, Vue e Node.js. Crio sistemas web e apps sob medida, escaláveis e de alta performance.",
         viewPortfolio: "VER PORTFÓLIO",
         quote: "ORÇAMENTO",
+        downloadCV: "BAIXAR CV",
         systemActive: "SYSTEM: ACTIVE",
         clients: "CLIENTES",
         satisfied: "15+ SATISFEITOS",
@@ -170,6 +174,8 @@ const DevPortfolio = () => {
         about: "// SOBRE O PROJETO",
         tech: "// TECNOLOGIAS",
         close: "FECHAR",
+        visit: "VISITAR PROJETO",
+        wantOne: "QUERO UM IGUAL",
       },
       testimonials: {
         titlePrefix: "FEEDBACKS",
@@ -281,6 +287,8 @@ const DevPortfolio = () => {
     {
       id: 1,
       title: "VET ANESTHESIA PRO",
+      link: "https://vetanesthesiapro.com/",
+      saas: true,
       description: {
         pt: "SaaS para clínicas veterinárias. Gestão completa de anestesias com alta precisão.",
         en: "SaaS for veterinary clinics. Complete anesthesia management with high precision.",
@@ -293,6 +301,23 @@ const DevPortfolio = () => {
       status: "completed",
       type: { pt: "SAAS", en: "SAAS" },
       color: "bg-blue-500",
+    },
+    {
+      id: 19,
+      title: "FORUM VET ANESTHESIA",
+      link: "https://forum.vetanesthesiapro.com/",
+      description: {
+        pt: "Fórum dedicado à comunidade veterinária para discussão de casos e protocolos.",
+        en: "Forum dedicated to the veterinary community for discussing cases and protocols.",
+      },
+      longDescription: {
+        pt: "Plataforma de comunidade para veterinários trocarem experiências, discutirem casos complexos de anestesia e compartilharem protocolos. Em desenvolvimento constante.",
+        en: "Community platform for veterinarians to exchange experiences, discuss complex anesthesia cases and share protocols. Under constant development.",
+      },
+      tags: ["Flarum", "PHP", "MySQL", "Docker"],
+      status: "dev",
+      type: { pt: "COMMUNITY", en: "COMMUNITY" },
+      color: "bg-blue-400",
     },
     {
       id: 2,
@@ -360,7 +385,8 @@ const DevPortfolio = () => {
     },
     {
       id: 6,
-      title: "VIAPET MARKETPLACE",
+      title: "VIAPET.SHOP",
+      link: "https://viapet.shop/",
       description: {
         pt: "Marketplace para venda de produtos e serviços para pets.",
         en: "Marketplace for selling pet products and services.",
@@ -377,6 +403,7 @@ const DevPortfolio = () => {
     {
       id: 7,
       title: "ACHEICASA.NET",
+      link: "https://acheicasa.net/",
       description: {
         pt: "Portal de busca e anúncios de imóveis.",
         en: "Real estate search and advertisement portal.",
@@ -473,6 +500,7 @@ const DevPortfolio = () => {
     {
       id: 13,
       title: "ALUGMOTOS (LP)",
+      link: "https://alugmotos.com.br/",
       description: {
         pt: "Landing page dinâmica para locação de motos.",
         en: "Dynamic landing page for motorcycle rental.",
@@ -505,6 +533,8 @@ const DevPortfolio = () => {
     {
       id: 15,
       title: "CARDAPIU",
+      link: "https://cardapiu.shop/",
+      saas: true,
       description: {
         pt: "Sistema de delivery para estabelecimentos.",
         en: "Delivery system for establishments.",
@@ -521,6 +551,7 @@ const DevPortfolio = () => {
     {
       id: 16,
       title: "ENTREGU",
+      link: "https://www.entregu.com.br/",
       description: {
         pt: "Sistema para entregadores e lojistas.",
         en: "System for couriers and shopkeepers.",
@@ -549,6 +580,24 @@ const DevPortfolio = () => {
       status: "dev",
       type: { pt: "MARKETING", en: "MARKETING" },
       color: "bg-purple-600",
+    },
+    {
+      id: 18,
+      title: "LORYS MODA CRISTA",
+      link: "https://lorysmodacrista.com.br/",
+      saas: true,
+      description: {
+        pt: "E-commerce de moda cristã completo.",
+        en: "Complete Christian fashion e-commerce.",
+      },
+      longDescription: {
+        pt: "Loja virtual completa com sistema de gestão de pedidos, integração com Melhor Envio para fretes e Mercado Pago para pagamentos. Painel administrativo intuitivo.",
+        en: "Complete virtual store with order management system, integration with Melhor Envio for shipping and Mercado Pago for payments. Intuitive administrative panel.",
+      },
+      tags: ["React", "Next.js", "Supabase", "Melhor Envio", "Mercado Pago", "shadcn"],
+      status: "completed",
+      type: { pt: "E-COMMERCE", en: "E-COMMERCE" },
+      color: "bg-pink-600",
     },
   ];
 
@@ -947,6 +996,19 @@ const DevPortfolio = () => {
                 >
                   {t.hero.quote}
                 </motion.button>
+                <motion.a
+                  href="/Curriculo%20JOAO%20VITOR%20ALVES%20FERNANDES%20BARROS.pdf"
+                  download="Curriculo-JoaoVitor.pdf"
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: "#ffffff",
+                    color: "#000000",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-4 bg-transparent text-white font-bold text-lg border-2 border-white transition-colors flex items-center justify-center gap-2"
+                >
+                  {t.hero.downloadCV} <ExternalLink size={20} className="rotate-180" />
+                </motion.a>
               </motion.div>
             </motion.div>
 
@@ -1582,11 +1644,41 @@ const DevPortfolio = () => {
                   </div>
                 </div>
 
-                <div className="mt-8 pt-4 border-t border-neutral-800 flex justify-end">
+                <div className="mt-8 pt-4 border-t border-neutral-800 flex flex-wrap gap-4 justify-end">
+                  {selectedProject.link && (
+                     <motion.a
+                      href={selectedProject.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-lime-400 text-black px-6 py-2 font-black uppercase flex items-center gap-2 border-2 border-transparent hover:bg-lime-500 transition-colors text-sm"
+                    >
+                      {t.projects.visit} <Globe size={16} />
+                    </motion.a>
+                  )}
+
+                  {selectedProject.saas && (
+                    <motion.a
+                      href={`https://wa.me/${personalData.whatsapp}?text=${encodeURIComponent(
+                        language === 'pt' 
+                          ? `Olá, vi o projeto ${selectedProject.title} no seu portfólio e gostaria de um igual.` 
+                          : `Hello, I saw the project ${selectedProject.title} in your portfolio and would like one like it.`
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-neutral-100 text-black px-6 py-2 font-black uppercase flex items-center gap-2 border-2 border-lime-400 hover:bg-white transition-colors text-sm"
+                    >
+                      {t.projects.wantOne} <MessageCircle size={16} />
+                    </motion.a>
+                  )}
+
                   <motion.button
                     whileHover={{ x: 5 }}
                     onClick={() => setSelectedProject(null)}
-                    className="text-white font-bold flex items-center gap-2 hover:text-lime-400"
+                    className="text-white font-bold flex items-center gap-2 hover:text-lime-400 ml-auto"
                   >
                     {t.projects.close} <ArrowRight size={16} />
                   </motion.button>
