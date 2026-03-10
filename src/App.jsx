@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+﻿import React, { useState, useEffect, useRef } from "react";
 import {
   motion,
   AnimatePresence,
@@ -85,6 +85,8 @@ const DevPortfolio = () => {
       projects: {
         label: "// FULL PORTFOLIO",
         title: "PROJECTS",
+        otherLabel: "// OTHER PROJECTS",
+        accordionSummary: "VIEW OTHER PROJECTS",
         viewGithub: "View GitHub",
         viewDetails: "View Details",
         statusCompleted: "COMPLETED",
@@ -167,6 +169,8 @@ const DevPortfolio = () => {
       projects: {
         label: "// PORTFÓLIO COMPLETO",
         title: "PROJETOS",
+        otherLabel: "// OUTROS PROJETOS",
+        accordionSummary: "VER OUTROS PROJETOS",
         viewGithub: "Ver GitHub",
         viewDetails: "Ver Detalhes",
         statusCompleted: "CONCLUÍDO",
@@ -315,26 +319,29 @@ const DevPortfolio = () => {
         en: "Community platform for veterinarians to exchange experiences, discuss complex anesthesia cases and share protocols. Under constant development.",
       },
       tags: ["Next.js", "Supabase", "Redis", "Postgres", "Google OAuth"],
-      status: "dev",
+      status: "completed",
       type: { pt: "COMMUNITY", en: "COMMUNITY" },
       color: "bg-blue-400",
     },
     {
-      id: 2,
-      title: "DELIBOT AI",
+      id: 20,
+      title: "NEXO DELIVERY",
+      link: "https://nexodelivery.app/",
+      saas: true,
       description: {
-        pt: "Bot de WhatsApp com IA para automação de delivery e atendimento ao cliente.",
-        en: "WhatsApp Bot with AI for delivery automation and customer service.",
+        pt: "Sistema completo de delivery para restaurantes e marketplaces com app mobile e painÃ©is web.",
+        en: "Complete delivery system for restaurants and marketplaces with mobile app and web dashboards.",
       },
       longDescription: {
-        pt: "Solução de automação de atendimento para delivery via WhatsApp. Utiliza IA para entender pedidos, responder dúvidas e finalizar compras autonomamente. Integrado com Evolution API e Docker.",
-        en: "Customer service automation solution for delivery via WhatsApp. Uses AI to understand orders, answer questions and finalize purchases autonomously. Integrated with Evolution API and Docker.",
+        pt: "SoluÃ§Ã£o end-to-end para gestÃ£o de pedidos, rastreamento em tempo real e painel de administraÃ§Ã£o para restaurante e lojistas. Stack integrada com React Native, Next.js, Node.js, Redis, PostgreSQL, AbacatePay e Docker.",
+        en: "End-to-end platform for order management, real-time tracking and administrative dashboards for restaurants and merchants. Built with React Native, Next.js, Node.js, Redis, PostgreSQL, AbacatePay and Docker.",
       },
-      tags: ["Astro", "Node.js", "Docker", "AI", "Evolution API"],
+      tags: ["React Native", "Next.js", "Node.js", "Redis", "PostgreSQL", "AbacatePay", "Docker"],
       status: "completed",
-      type: { pt: "BOT/AI", en: "BOT/AI" },
-      color: "bg-yellow-500",
+      type: { pt: "DELIVERY", en: "DELIVERY" },
+      color: "bg-lime-500",
     },
+
     {
       id: 3,
       title: "CARRO DIGITAL",
@@ -367,22 +374,7 @@ const DevPortfolio = () => {
       type: { pt: "SISTEMA", en: "SYSTEM" },
       color: "bg-emerald-500",
     },
-    {
-      id: 5,
-      title: "BRICOIN",
-      description: {
-        pt: "Sistema completo de investimento integrado com gateway de pagamento.",
-        en: "Complete investment system integrated with payment gateway.",
-      },
-      longDescription: {
-        pt: "Plataforma de investimentos segura e escalável, com integração completa de pagamentos via Mercado Pago. Desenvolvida para alta performance financeira.",
-        en: "Secure and scalable investment platform, with complete payment integration via Mercado Pago. Developed for high financial performance.",
-      },
-      tags: ["Node.js", "Vue", "Mercado Pago", "MySQL"],
-      status: "completed",
-      type: { pt: "FINTECH", en: "FINTECH" },
-      color: "bg-indigo-500",
-    },
+
     {
       id: 6,
       title: "VIAPET.SHOP",
@@ -456,38 +448,8 @@ const DevPortfolio = () => {
       type: { pt: "AUTOMATION", en: "AUTOMATION" },
       color: "bg-pink-500",
     },
-    {
-      id: 10,
-      title: "COPLANNER",
-      description: {
-        pt: "Controle de vendas e estoque multiplataforma.",
-        en: "Multiplatform sales and stock control.",
-      },
-      longDescription: {
-        pt: "Aplicação para controle rigoroso de vendas e inventário, desenvolvida para ser rápida e acessível em qualquer dispositivo.",
-        en: "Application for rigorous sales and inventory control, developed to be fast and accessible on any device.",
-      },
-      tags: ["FlutterFlow", "Supabase", "MySQL"],
-      status: "completed",
-      type: { pt: "MOBILE/WEB", en: "MOBILE/WEB" },
-      color: "bg-teal-500",
-    },
-    {
-      id: 11,
-      title: "BLOG CIENCIAETECH",
-      description: {
-        pt: "Blog de ciências e tecnologia com CMS próprio.",
-        en: "Science and technology blog with custom CMS.",
-      },
-      longDescription: {
-        pt: "Plataforma de conteúdo focada em ciência e tecnologia, com um gerenciador de conteúdo (CMS) customizado para os editores.",
-        en: "Content platform focused on science and technology, with a custom content manager (CMS) for editors.",
-      },
-      tags: ["Node.js", "Vue.js", "MySQL"],
-      status: "completed",
-      type: { pt: "CONTENT", en: "CONTENT" },
-      color: "bg-gray-500",
-    },
+
+
     {
       id: 12,
       title: "ALERTAS FUTEBOL",
@@ -572,22 +534,7 @@ const DevPortfolio = () => {
       type: { pt: "LOGÍSTICA", en: "LOGISTICS" },
       color: "bg-red-600",
     },
-    {
-      id: 17,
-      title: "MARKETING CAMPAIGNS",
-      description: {
-        pt: "Plataforma para automação de campanhas multicanal.",
-        en: "Platform for multichannel campaign automation.",
-      },
-      longDescription: {
-        pt: "Ferramenta robusta para criação e disparo de campanhas de marketing via WhatsApp, E-mail e SMS.",
-        en: "Robust tool for creating and triggering marketing campaigns via WhatsApp, Email and SMS.",
-      },
-      tags: ["Node.js", "Next.js", "Redis"],
-      status: "completed",
-      type: { pt: "MARKETING", en: "MARKETING" },
-      color: "bg-purple-600",
-    },
+
     {
       id: 18,
       title: "LORYS MODA CRISTA",
@@ -607,6 +554,64 @@ const DevPortfolio = () => {
       color: "bg-pink-600",
     },
   ];
+
+  const normalizeProjectTitle = (value) =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase();
+
+  const otherProjectTitles = [
+    "CARRO DIGITAL",
+    "GYMSOFTWARE",
+    "BOTYT",
+    "GESTAO LAVANDERIAS",
+    "ALERTAS FUTEBOL",
+  ];
+
+  const featuredProjects = projectsData.filter(
+    (project) => !otherProjectTitles.includes(normalizeProjectTitle(project.title))
+  );
+  const otherProjects = projectsData.filter((project) =>
+    otherProjectTitles.includes(normalizeProjectTitle(project.title))
+  );
+
+  const stackTechList = [
+    "React",
+    "Vue",
+    "React Native",
+    "Next.js",
+    "Node.js",
+    "PostgreSQL",
+    "Redis",
+    "Docker",
+  ];
+
+  const heroMetrics = [
+    {
+      value: 15,
+      suffix: "+",
+      label: t.hero.satisfied,
+    },
+    {
+      value: 8,
+      suffix: "+",
+      label: t.hero.deliveries,
+    },
+    {
+      value: 100,
+      suffix: "%",
+      label: t.hero.onTime,
+    },
+  ];
+
+  const otherProjectsGridItems = otherProjects.map((project) => ({
+    image: "/favicon.png",
+    title: project.title,
+    subtitle: project.type?.[language] ?? "",
+    handle: project.status === "completed" ? t.projects.statusCompleted : t.projects.statusDev,
+    location: project.tags?.[0] ? `${project.tags[0]} • ${project.tags?.[1] ?? ""}` : "",
+  }));
 
   const testimonialsData = [
     {
@@ -788,11 +793,10 @@ const DevPortfolio = () => {
 
       {/* Navbar */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b-2 ${
-          scrolled
-            ? "bg-neutral-900/95 backdrop-blur-sm border-lime-400 py-3"
-            : "bg-transparent border-transparent py-4 md:py-6"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b-2 ${scrolled
+          ? "bg-neutral-900/95 backdrop-blur-sm border-lime-400 py-3"
+          : "bg-transparent border-transparent py-4 md:py-6"
+          }`}
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
           <motion.div
@@ -822,10 +826,9 @@ const DevPortfolio = () => {
                 transition={{ delay: i * 0.1 }}
                 onClick={() => scrollTo(item.id)}
                 className={`uppercase tracking-widest text-sm hover:text-lime-400 transition-colors relative group
-                  ${
-                    activeSection === item.id
-                      ? "text-lime-400"
-                      : "text-neutral-400"
+                  ${activeSection === item.id
+                    ? "text-lime-400"
+                    : "text-neutral-400"
                   }
                 `}
               >
@@ -861,7 +864,7 @@ const DevPortfolio = () => {
               onClick={toggleLanguage}
               className="bg-black text-white px-3 py-2 font-bold border-2 border-white flex items-center gap-2 text-xs"
             >
-               {language === 'en' ? 'PT-BR' : 'EN'}
+              {language === 'en' ? 'PT-BR' : 'EN'}
             </motion.button>
 
             <motion.button
@@ -883,13 +886,13 @@ const DevPortfolio = () => {
           </motion.div>
 
           <div className="flex items-center gap-4 md:hidden z-50">
-             {/* Mobile Language Switcher */}
-             <button
-                onClick={toggleLanguage}
-                className="bg-black text-white px-2 py-1 font-bold border-2 border-white text-xs"
-              >
-                {language === 'en' ? 'PT' : 'EN'}
-             </button>
+            {/* Mobile Language Switcher */}
+            <button
+              onClick={toggleLanguage}
+              className="bg-black text-white px-2 py-1 font-bold border-2 border-white text-xs"
+            >
+              {language === 'en' ? 'PT' : 'EN'}
+            </button>
             <button
               className="text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -938,7 +941,11 @@ const DevPortfolio = () => {
           id="home"
           className="relative pt-32 pb-20 min-h-screen flex items-center border-b-2 border-neutral-800"
         >
-          <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_left,_rgba(163,230,53,0.3)_0%,_transparent_40%)]"></div>
+            <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_bottom_right,_rgba(34,197,94,0.2)_0%,_transparent_40%)]"></div>
+          </div>
+          <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
             <motion.div
               className="lg:col-span-8 z-10"
               variants={staggerContainer}
@@ -956,7 +963,7 @@ const DevPortfolio = () => {
                 variants={fadeInUp}
                 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none mb-6 tracking-tighter"
               >
-                JOÃO VITOR
+                JOAO VITOR
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-emerald-600 relative">
                   FULLSTACK
@@ -991,6 +998,7 @@ const DevPortfolio = () => {
                     className="group-hover:rotate-45 transition-transform duration-300"
                   />
                 </motion.button>
+
                 <motion.button
                   onClick={() => scrollTo("contact")}
                   whileHover={{
@@ -1003,6 +1011,7 @@ const DevPortfolio = () => {
                 >
                   {t.hero.quote}
                 </motion.button>
+
                 <motion.a
                   href="/Curriculo%20JOAO%20VITOR%20ALVES%20FERNANDES%20BARROS.pdf"
                   download="Curriculo-JoaoVitor.pdf"
@@ -1026,62 +1035,30 @@ const DevPortfolio = () => {
               transition={{ delay: 0.5, duration: 0.8 }}
               className="lg:col-span-4 relative hidden lg:block"
             >
-              <motion.div
-                whileHover={{
-                  y: -5,
-                  boxShadow: "8px 8px 0px 0px rgba(163,230,53,1)",
-                  borderColor: "#A3E635",
-                }}
-                className="bg-neutral-800 border-2 border-neutral-700 p-6 relative transition-colors"
-              >
-                <div className="absolute -top-3 -right-3 bg-lime-400 text-black px-2 font-bold border-2 border-black text-xs">
+              <div className="relative border-2 border-neutral-700 bg-neutral-900/80 p-6">
+                <div className="absolute -top-3 -left-3 bg-black text-lime-400 px-3 py-1 text-[10px] border border-lime-400">
                   {t.hero.systemActive}
                 </div>
-
-                <div className="space-y-4 font-mono text-sm">
-                  <div className="flex justify-between border-b border-neutral-700 pb-2">
-                    <span className="text-neutral-500">{t.hero.clients}</span>
-                    <span className="text-lime-400">{t.hero.satisfied}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-neutral-700 pb-2">
-                    <span className="text-neutral-500">{t.hero.rating}</span>
-                    <div className="flex text-lime-400">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} size={14} fill="currentColor" />
-                      ))}
+                <div className="grid grid-cols-1 gap-4 pt-4">
+                  {heroMetrics.map((metric) => (
+                    <div
+                      key={metric.label}
+                      className="bg-black border border-neutral-700 p-4 flex items-center justify-between"
+                    >
+                      <span className="text-xs text-neutral-400 uppercase">
+                        {metric.label}
+                      </span>
+                      <span className="text-2xl font-black text-white">
+                        {metric.value}
+                        {metric.suffix}
+                      </span>
                     </div>
-                  </div>
-                  <div className="flex justify-between pb-2">
-                    <span className="text-neutral-500">{t.hero.deliveries}</span>
-                    <span className="animate-pulse text-lime-400 font-bold">
-                      {t.hero.onTime}
-                    </span>
-                  </div>
+                  ))}
                 </div>
-
-                <div className="mt-6 h-32 bg-black border border-neutral-700 p-2 flex items-end gap-1">
-                  {[40, 70, 45, 90, 60, 85, 50, 75, 95, 60, 80, 50].map(
-                    (h, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ height: 0 }}
-                        animate={{ height: `${h}%` }}
-                        transition={{ delay: 1 + i * 0.05, duration: 0.5 }}
-                        whileHover={{ backgroundColor: "#ffffff" }}
-                        className="flex-1 bg-lime-400"
-                      />
-                    )
-                  )}
-                </div>
-                <p className="text-xs text-neutral-500 mt-2 text-center">
-                  {t.hero.githubActivity}
-                </p>
-              </motion.div>
-              <div className="absolute top-4 left-4 w-full h-full border-2 border-dashed border-neutral-700 -z-10"></div>
+              </div>
             </motion.div>
           </div>
         </section>
-
         {/* Marquee */}
         <div className="bg-lime-400 text-black py-3 overflow-hidden border-y-2 border-black rotate-1 scale-105 z-20 relative select-none">
           <motion.div
@@ -1112,6 +1089,17 @@ const DevPortfolio = () => {
                 {t.stack.fullstack}
               </span>
             </motion.div>
+
+            <div className="mb-8 flex flex-wrap gap-2">
+              {stackTechList.map((tech) => (
+                <span
+                  key={tech}
+                  className="bg-black border border-neutral-700 px-3 py-1 text-sm text-lime-400 hover:bg-lime-400 hover:text-black transition-colors cursor-default"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <motion.div
@@ -1259,13 +1247,12 @@ const DevPortfolio = () => {
                       </span>
                     </div>
                     <span
-                      className={`text-[10px] font-bold px-2 py-0.5 border ${
-                        project.status === "completed"
-                          ? "border-lime-400 text-lime-400"
-                          : "border-yellow-500 text-yellow-500"
-                      }`}
+                      className={`text-[10px] font-bold px-2 py-0.5 border ${project.status === "completed"
+                        ? "border-lime-400 text-lime-400"
+                        : "border-yellow-500 text-yellow-500"
+                        }`}
                     >
-                       {project.status === 'completed' ? t.projects.statusCompleted : t.projects.statusDev}
+                      {project.status === 'completed' ? t.projects.statusCompleted : t.projects.statusDev}
                     </span>
                   </div>
 
@@ -1569,7 +1556,6 @@ const DevPortfolio = () => {
       {/* Footer */}
       <footer className="bg-black text-neutral-500 py-8 text-center text-xs border-t border-neutral-800">
         <p>{t.footer.text}</p>
-        <p className="mt-1 opacity-50">CNPJ: 51.856.846/0001-69</p>
         <div className="flex justify-center gap-4 mt-4 text-lime-400 font-bold">
           <span className="hover:underline cursor-pointer">REACT</span>
           <span>//</span>
@@ -1613,11 +1599,10 @@ const DevPortfolio = () => {
               <div className="p-6 md:p-8">
                 <div className="flex flex-wrap gap-2 mb-6">
                   <span
-                    className={`text-[10px] font-bold px-2 py-0.5 border ${
-                      selectedProject.status === "completed"
-                        ? "border-lime-400 text-lime-400"
-                        : "border-yellow-500 text-yellow-500"
-                    }`}
+                    className={`text-[10px] font-bold px-2 py-0.5 border ${selectedProject.status === "completed"
+                      ? "border-lime-400 text-lime-400"
+                      : "border-yellow-500 text-yellow-500"
+                      }`}
                   >
                     {selectedProject.status === "completed" ? t.projects.statusCompleted : t.projects.statusDev}
                   </span>
@@ -1653,7 +1638,7 @@ const DevPortfolio = () => {
 
                 <div className="mt-8 pt-4 border-t border-neutral-800 flex flex-wrap gap-4 justify-end">
                   {selectedProject.link && (
-                     <motion.a
+                    <motion.a
                       href={selectedProject.link}
                       target="_blank"
                       rel="noreferrer"
@@ -1668,8 +1653,8 @@ const DevPortfolio = () => {
                   {selectedProject.saas && (
                     <motion.a
                       href={`https://wa.me/${personalData.whatsapp}?text=${encodeURIComponent(
-                        language === 'pt' 
-                          ? `Olá, vi o projeto ${selectedProject.title} no seu portfólio e gostaria de um igual.` 
+                        language === 'pt'
+                          ? `Olá, vi o projeto ${selectedProject.title} no seu portfólio e gostaria de um igual.`
                           : `Hello, I saw the project ${selectedProject.title} in your portfolio and would like one like it.`
                       )}`}
                       target="_blank"
