@@ -1,21 +1,19 @@
-﻿import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   motion,
   AnimatePresence,
   useScroll,
   useTransform,
 } from "framer-motion";
+void motion;
 import {
   Terminal,
   Code,
-  Cpu,
   ExternalLink,
   Github,
   Linkedin,
   Mail,
   Zap,
-  Database,
-  Layout,
   Send,
   MessageCircle,
   Star,
@@ -30,10 +28,13 @@ import {
 
 const DevPortfolio = () => {
   const [language, setLanguage] = useState("en");
-  const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [selectedProject, setSelectedProject] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const projectsSectionRef = useRef(null);
+  const projectsScrollRef = useRef(null);
+  const panelClass =
+    "rounded-[2rem] border border-neutral-800 bg-neutral-900/40 backdrop-blur-sm shadow-[0_24px_80px_rgba(0,0,0,0.28)]";
 
   // Estados do Formulário
   const [formStatus, setFormStatus] = useState("idle"); // idle, submitting, success, error
@@ -123,7 +124,7 @@ const DevPortfolio = () => {
         placeholderMsg: "Describe your mission...",
       },
       footer: {
-        text: "Developed with hate and caffeine. © 2025 JOÃO VITOR.",
+        text: "Developed with hate and caffeine. © 2026 JOÃO VITOR.",
       },
       meta: {
         title: "João Vitor | Fullstack Developer React, Vue and Node.js",
@@ -207,7 +208,7 @@ const DevPortfolio = () => {
         placeholderMsg: "Descreva sua missão...",
       },
       footer: {
-        text: "Desenvolvido com ódio e cafeína. © 2025 JOÃO VITOR.",
+        text: "Desenvolvido com ódio e cafeína. © 2026 JOÃO VITOR.",
       },
       meta: {
         title: "João Vitor | Desenvolvedor Fullstack React, Vue e Node.js",
@@ -257,6 +258,7 @@ const DevPortfolio = () => {
   // Atualiza Título, Meta Description e Favicon dinamicamente
   useEffect(() => {
     // 1. Title
+    // eslint-disable-next-line react-hooks/immutability
     document.title = t.meta.title;
 
     // 2. Meta Description
@@ -279,13 +281,15 @@ const DevPortfolio = () => {
     document.head.appendChild(link);
   }, [language, t.meta.title, t.meta.description]); // Update when language changes
 
-  const navItems = [
-    { label: t.nav.home, id: "home" },
-    { label: t.nav.stack, id: "stack" },
-    { label: t.nav.projects, id: "projects" },
-    { label: t.nav.testimonials, id: "testimonials" },
-    { label: t.nav.contact, id: "contact" },
-  ];
+  const navItems = useMemo(
+    () => [
+      { label: t.nav.home, id: "home" },
+      { label: t.nav.projects, id: "projects" },
+      { label: t.nav.testimonials, id: "testimonials" },
+      { label: t.nav.contact, id: "contact" },
+    ],
+    [t.nav.contact, t.nav.home, t.nav.projects, t.nav.testimonials]
+  );
 
   const projectsData = [
     {
@@ -329,11 +333,11 @@ const DevPortfolio = () => {
       link: "https://nexodelivery.app/",
       saas: true,
       description: {
-        pt: "Sistema completo de delivery para restaurantes e marketplaces com app mobile e painÃ©is web.",
+        pt: "Sistema completo de delivery para restaurantes e marketplaces com app mobile e painéis web.",
         en: "Complete delivery system for restaurants and marketplaces with mobile app and web dashboards.",
       },
       longDescription: {
-        pt: "SoluÃ§Ã£o end-to-end para gestÃ£o de pedidos, rastreamento em tempo real e painel de administraÃ§Ã£o para restaurante e lojistas. Stack integrada com React Native, Next.js, Node.js, Redis, PostgreSQL, AbacatePay e Docker.",
+        pt: "Solução end-to-end para gestão de pedidos, rastreamento em tempo real e painel de administração para restaurante e lojistas. Stack integrada com React Native, Next.js, Node.js, Redis, PostgreSQL, AbacatePay e Docker.",
         en: "End-to-end platform for order management, real-time tracking and administrative dashboards for restaurants and merchants. Built with React Native, Next.js, Node.js, Redis, PostgreSQL, AbacatePay and Docker.",
       },
       tags: ["React Native", "Next.js", "Node.js", "Redis", "PostgreSQL", "AbacatePay", "Docker"],
@@ -555,64 +559,6 @@ const DevPortfolio = () => {
     },
   ];
 
-  const normalizeProjectTitle = (value) =>
-    value
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toUpperCase();
-
-  const otherProjectTitles = [
-    "CARRO DIGITAL",
-    "GYMSOFTWARE",
-    "BOTYT",
-    "GESTAO LAVANDERIAS",
-    "ALERTAS FUTEBOL",
-  ];
-
-  const featuredProjects = projectsData.filter(
-    (project) => !otherProjectTitles.includes(normalizeProjectTitle(project.title))
-  );
-  const otherProjects = projectsData.filter((project) =>
-    otherProjectTitles.includes(normalizeProjectTitle(project.title))
-  );
-
-  const stackTechList = [
-    "React",
-    "Vue",
-    "React Native",
-    "Next.js",
-    "Node.js",
-    "PostgreSQL",
-    "Redis",
-    "Docker",
-  ];
-
-  const heroMetrics = [
-    {
-      value: 15,
-      suffix: "+",
-      label: t.hero.satisfied,
-    },
-    {
-      value: 8,
-      suffix: "+",
-      label: t.hero.deliveries,
-    },
-    {
-      value: 100,
-      suffix: "%",
-      label: t.hero.onTime,
-    },
-  ];
-
-  const otherProjectsGridItems = otherProjects.map((project) => ({
-    image: "/favicon.png",
-    title: project.title,
-    subtitle: project.type?.[language] ?? "",
-    handle: project.status === "completed" ? t.projects.statusCompleted : t.projects.statusDev,
-    location: project.tags?.[0] ? `${project.tags[0]} • ${project.tags?.[1] ?? ""}` : "",
-  }));
-
   const testimonialsData = [
     {
       id: 1,
@@ -693,10 +639,8 @@ const DevPortfolio = () => {
   // Scroll detection
   const { scrollYProgress } = useScroll();
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
       const sections = navItems.map((item) => item.id);
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
@@ -757,7 +701,7 @@ const DevPortfolio = () => {
         setFormStatus("error");
         setFormMessage(t.contact.error);
       }
-    } catch (error) {
+    } catch {
       setFormStatus("error");
       setFormMessage(t.contact.connError);
     }
@@ -765,6 +709,16 @@ const DevPortfolio = () => {
 
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === "en" ? "pt" : "en"));
+  };
+
+  const scrollProjects = (direction) => {
+    const container = projectsScrollRef.current;
+    if (!container) return;
+
+    container.scrollBy({
+      left: direction * 360,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -793,26 +747,23 @@ const DevPortfolio = () => {
 
       {/* Navbar */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b-2 ${scrolled
-          ? "bg-neutral-900/95 backdrop-blur-sm border-lime-400 py-3"
-          : "bg-transparent border-transparent py-4 md:py-6"
-          }`}
+        className="fixed top-4 left-0 right-0 z-50 px-4 transition-all duration-300"
       >
-        <div className="container mx-auto px-4 flex justify-between items-center">
+        <div className={`${panelClass} container mx-auto px-4 flex justify-between items-center py-3`}>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="text-xl md:text-2xl font-black tracking-tighter flex items-center gap-2 group cursor-pointer z-50"
             onClick={() => scrollTo("home")}
           >
-            <div className="bg-lime-400 text-black p-1 border-2 border-black group-hover:rotate-12 transition-transform duration-300">
+            <div className="rounded-2xl bg-lime-400 text-black p-2 border border-lime-400/40 group-hover:rotate-12 transition-transform duration-300">
               <Terminal size={20} />
             </div>
             <motion.span
               animate={{ opacity: [1, 0.5, 1, 1], x: [0, 2, -2, 0] }}
               transition={{ repeat: Infinity, duration: 5, repeatDelay: 3 }}
             >
-              JV_DEV
+              JVitor
             </motion.span>
           </motion.div>
 
@@ -825,7 +776,7 @@ const DevPortfolio = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
                 onClick={() => scrollTo(item.id)}
-                className={`uppercase tracking-widest text-sm hover:text-lime-400 transition-colors relative group
+                className={`cursor-pointer uppercase tracking-widest text-sm hover:text-lime-400 transition-colors relative group
                   ${activeSection === item.id
                     ? "text-lime-400"
                     : "text-neutral-400"
@@ -862,7 +813,7 @@ const DevPortfolio = () => {
                 boxShadow: "0px 0px 0px 0px #ffffff",
               }}
               onClick={toggleLanguage}
-              className="bg-black text-white px-3 py-2 font-bold border-2 border-white flex items-center gap-2 text-xs"
+              className="cursor-pointer rounded-full bg-black/40 text-white px-3 py-2 font-bold border border-neutral-700 flex items-center gap-2 text-xs"
             >
               {language === 'en' ? 'PT-BR' : 'EN'}
             </motion.button>
@@ -879,7 +830,7 @@ const DevPortfolio = () => {
               onClick={() =>
                 window.open(`https://wa.me/${personalData.whatsapp}`, "_blank")
               }
-              className="bg-neutral-100 text-black px-4 py-2 font-bold border-2 border-lime-400 flex items-center gap-2 text-sm"
+              className="cursor-pointer rounded-full bg-neutral-100 text-black px-4 py-2 font-bold border border-lime-400 flex items-center gap-2 text-sm"
             >
               <MessageCircle size={16} /> WHATSAPP
             </motion.button>
@@ -889,12 +840,12 @@ const DevPortfolio = () => {
             {/* Mobile Language Switcher */}
             <button
               onClick={toggleLanguage}
-              className="bg-black text-white px-2 py-1 font-bold border-2 border-white text-xs"
+              className="cursor-pointer rounded-full bg-black/40 text-white px-2 py-1 font-bold border border-neutral-700 text-xs"
             >
               {language === 'en' ? 'PT' : 'EN'}
             </button>
             <button
-              className="text-white"
+              className="cursor-pointer text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Menu"
             >
@@ -918,7 +869,7 @@ const DevPortfolio = () => {
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="text-2xl font-black uppercase text-white hover:text-lime-400 transition-colors"
+                className="cursor-pointer text-2xl font-black uppercase text-white hover:text-lime-400 transition-colors"
               >
                 {item.label}
               </button>
@@ -927,7 +878,7 @@ const DevPortfolio = () => {
               onClick={() =>
                 window.open(`https://wa.me/${personalData.whatsapp}`, "_blank")
               }
-              className="mt-8 bg-lime-400 text-black px-8 py-3 font-black text-xl border-2 border-white"
+              className="cursor-pointer mt-8 rounded-full bg-lime-400 text-black px-8 py-3 font-black text-xl border border-white"
             >
               WHATSAPP
             </button>
@@ -945,16 +896,16 @@ const DevPortfolio = () => {
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_left,_rgba(163,230,53,0.3)_0%,_transparent_40%)]"></div>
             <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_bottom_right,_rgba(34,197,94,0.2)_0%,_transparent_40%)]"></div>
           </div>
-          <div className="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+          <div className="container mx-auto px-4 grid grid-cols-1 gap-12 items-center relative z-10">
             <motion.div
-              className="lg:col-span-8 z-10"
+              className="z-10 max-w-4xl"
               variants={staggerContainer}
               initial="hidden"
               animate="visible"
             >
               <motion.div
                 variants={fadeInUp}
-                className="inline-block bg-lime-400 text-black px-2 py-1 text-xs font-bold mb-6 border-2 border-black transform -rotate-1"
+                className="inline-flex items-center rounded-full border border-lime-400/40 bg-lime-400/10 px-3 py-1 text-xs font-bold mb-6 text-lime-400"
               >
                 {t.hero.available}
               </motion.div>
@@ -973,7 +924,7 @@ const DevPortfolio = () => {
 
               <motion.p
                 variants={fadeInUp}
-                className="text-lg md:text-2xl text-neutral-400 max-w-2xl mb-10 border-l-4 border-lime-400 pl-6"
+                className="text-lg md:text-2xl text-neutral-400 max-w-2xl mb-10"
               >
                 {t.hero.description}
               </motion.p>
@@ -990,7 +941,7 @@ const DevPortfolio = () => {
                     color: "#A3E635",
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-lime-400 text-black font-black text-lg border-2 border-lime-400 flex items-center justify-center gap-2 group transition-colors"
+                  className="cursor-pointer rounded-full px-8 py-4 bg-lime-400 text-black font-black text-lg border border-lime-400 flex items-center justify-center gap-2 group transition-colors"
                 >
                   {t.hero.viewPortfolio}
                   <ExternalLink
@@ -1007,7 +958,7 @@ const DevPortfolio = () => {
                     color: "#000000",
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-transparent text-white font-bold text-lg border-2 border-white transition-colors"
+                  className="cursor-pointer rounded-full px-8 py-4 bg-black/20 text-white font-bold text-lg border border-neutral-700 transition-colors"
                 >
                   {t.hero.quote}
                 </motion.button>
@@ -1021,41 +972,11 @@ const DevPortfolio = () => {
                     color: "#000000",
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-4 bg-transparent text-white font-bold text-lg border-2 border-white transition-colors flex items-center justify-center gap-2"
+                  className="cursor-pointer rounded-full px-8 py-4 bg-black/20 text-white font-bold text-lg border border-neutral-700 transition-colors flex items-center justify-center gap-2"
                 >
                   {t.hero.downloadCV} <ExternalLink size={20} className="rotate-180" />
                 </motion.a>
               </motion.div>
-            </motion.div>
-
-            {/* Stats Box */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="lg:col-span-4 relative hidden lg:block"
-            >
-              <div className="relative border-2 border-neutral-700 bg-neutral-900/80 p-6">
-                <div className="absolute -top-3 -left-3 bg-black text-lime-400 px-3 py-1 text-[10px] border border-lime-400">
-                  {t.hero.systemActive}
-                </div>
-                <div className="grid grid-cols-1 gap-4 pt-4">
-                  {heroMetrics.map((metric) => (
-                    <div
-                      key={metric.label}
-                      className="bg-black border border-neutral-700 p-4 flex items-center justify-between"
-                    >
-                      <span className="text-xs text-neutral-400 uppercase">
-                        {metric.label}
-                      </span>
-                      <span className="text-2xl font-black text-white">
-                        {metric.value}
-                        {metric.suffix}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </motion.div>
           </div>
         </section>
@@ -1073,132 +994,14 @@ const DevPortfolio = () => {
           </motion.div>
         </div>
 
-        {/* Stack Section */}
-        <section id="stack" className="py-24 bg-neutral-900">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="flex items-end justify-between mb-16 border-b border-neutral-800 pb-4"
-            >
-              <h2 className="text-4xl md:text-6xl font-black text-white">
-                {t.stack.titlePrefix}<span className="text-neutral-600">{t.stack.titleSuffix}</span>
-              </h2>
-              <span className="hidden md:block text-lime-400 font-bold text-xl">
-                {t.stack.fullstack}
-              </span>
-            </motion.div>
-
-            <div className="mb-8 flex flex-wrap gap-2">
-              {stackTechList.map((tech) => (
-                <span
-                  key={tech}
-                  className="bg-black border border-neutral-700 px-3 py-1 text-sm text-lime-400 hover:bg-lime-400 hover:text-black transition-colors cursor-default"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <motion.div
-                whileHover={{ y: -5, borderColor: "#A3E635" }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="col-span-1 lg:col-span-2 bg-neutral-800 p-8 border-2 border-transparent transition-colors group relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
-                  <Layout size={100} />
-                </div>
-                <div className="bg-black w-12 h-12 flex items-center justify-center mb-6 group-hover:bg-lime-400 group-hover:text-black transition-colors duration-300 relative z-10">
-                  <Layout size={24} />
-                </div>
-                <h3 className="text-2xl font-bold mb-4 relative z-10">
-                  {t.stack.frontend}
-                </h3>
-                <div className="flex flex-wrap gap-2 relative z-10">
-                  {[
-                    "React",
-                    "Vue",
-                    "React Native",
-                    "Next.js",
-                    "Tailwind",
-                    "Astro",
-                  ].map((tech) => (
-                    <span
-                      key={tech}
-                      className="bg-black border border-neutral-700 px-3 py-1 text-sm text-lime-400 hover:bg-lime-400 hover:text-black transition-colors cursor-default"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ y: -5, borderColor: "#A3E635" }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="col-span-1 lg:col-span-1 bg-neutral-800 p-8 border-2 border-transparent transition-colors group"
-              >
-                <div className="bg-black w-12 h-12 flex items-center justify-center mb-6 group-hover:bg-lime-400 group-hover:text-black transition-colors duration-300">
-                  <Database size={24} />
-                </div>
-                <h3 className="text-xl font-bold mb-4">{t.stack.backend}</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm border-b border-neutral-700 py-1">
-                    <span>Node.js / Express</span>{" "}
-                    <span className="text-lime-400">Expert</span>
-                  </div>
-                  <div className="flex justify-between text-sm border-b border-neutral-700 py-1">
-                    <span>PostgreSQL</span>{" "}
-                    <span className="text-lime-400">Advanced</span>
-                  </div>
-                  <div className="flex justify-between text-sm border-b border-neutral-700 py-1">
-                    <span>Supabase</span>{" "}
-                    <span className="text-lime-400">Advanced</span>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                whileHover={{ y: -5, backgroundColor: "#171717" }}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="col-span-1 lg:col-span-1 bg-neutral-900 border-2 border-dashed border-neutral-700 p-8 flex flex-col justify-between"
-              >
-                <div>
-                  <Cpu size={40} className="text-neutral-500 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">{t.stack.devops}</h3>
-                  <p className="text-xs text-neutral-400 mb-4">
-                    {t.stack.devopsDesc}
-                  </p>
-                </div>
-                <div className="w-full h-32 bg-black border border-neutral-700 relative overflow-hidden flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="block text-2xl font-black text-lime-400">
-                      {t.stack.timeUnit}
-                    </span>
-                    <span className="text-[10px] text-neutral-500 uppercase">
-                      {t.stack.responseTime}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
+        {/* Stack Section (simplificado) */}
+        <section className="py-4 bg-neutral-900 border-t-2 border-neutral-800"></section>
 
         {/* Projects Section */}
         <section
           id="projects"
-          className="py-24 bg-neutral-950 border-t-2 border-neutral-800"
+          className="min-h-screen py-24 bg-neutral-950 border-t-2 border-neutral-800"
+          ref={projectsSectionRef}
         >
           <div className="container mx-auto px-4">
             <motion.div
@@ -1226,80 +1029,100 @@ const DevPortfolio = () => {
               </motion.a>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projectsData.map((project, index) => (
-                <motion.article
-                  key={project.id}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ y: -10 }}
-                  className="group relative bg-neutral-900 border-2 border-neutral-800 hover:border-lime-400 transition-colors duration-300 flex flex-col h-full"
-                >
-                  <div className="p-6 border-b-2 border-neutral-800 bg-neutral-800/50 flex justify-between items-start">
-                    <div className="flex gap-2">
-                      <div
-                        className={`w-3 h-3 rounded-full ${project.color}`}
-                      ></div>
-                      <span className="text-xs font-bold text-neutral-400">
-                        {project.type[language]}
-                      </span>
-                    </div>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 border ${project.status === "completed"
-                        ? "border-lime-400 text-lime-400"
-                        : "border-yellow-500 text-yellow-500"
-                        }`}
+            <div className="relative p-0 md:p-2">
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-7 rounded-l-[2rem] bg-gradient-to-r from-neutral-950 via-neutral-950/70 to-transparent z-10"></div>
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-7 rounded-r-[2rem] bg-gradient-to-l from-neutral-950 via-neutral-950/70 to-transparent z-10"></div>
+              <button
+                type="button"
+                onClick={() => scrollProjects(-1)}
+                aria-label="Scroll projects left"
+                className="hidden md:flex cursor-pointer absolute left-3 top-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full border border-neutral-800 bg-neutral-950/70 text-neutral-400 backdrop-blur-sm transition-colors hover:border-lime-400 hover:text-lime-400"
+              >
+                <ArrowRight size={16} className="rotate-180" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollProjects(1)}
+                aria-label="Scroll projects right"
+                className="hidden md:flex cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 z-20 h-11 w-11 items-center justify-center rounded-full border border-neutral-800 bg-neutral-950/70 text-neutral-400 backdrop-blur-sm transition-colors hover:border-lime-400 hover:text-lime-400"
+              >
+                <ArrowRight size={16} />
+              </button>
+              <div
+                ref={projectsScrollRef}
+                className="overflow-x-auto overflow-y-hidden w-full no-scrollbar pb-2"
+              >
+                <div className="flex gap-5 w-max pr-28">
+                  {projectsData.map((project, index) => (
+                    <motion.article
+                      key={project.id}
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-50px" }}
+                      transition={{ delay: index * 0.05 }}
+                      className="group relative overflow-hidden rounded-[1.75rem] bg-neutral-900/90 border border-neutral-800 hover:border-neutral-600 transition-all duration-300 flex flex-col h-[24rem] min-w-[300px] md:min-w-[360px] snap-start shadow-[0_16px_50px_rgba(0,0,0,0.28)]"
                     >
-                      {project.status === 'completed' ? t.projects.statusCompleted : t.projects.statusDev}
-                    </span>
-                  </div>
-
-                  <div className="p-8 relative flex-grow flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-2xl font-black mb-4 group-hover:text-lime-400 transition-colors duration-300">
-                        {project.title}
-                      </h3>
-                      <p className="text-neutral-400 mb-6 font-sans leading-relaxed text-sm">
-                        {project.description[language]}
-                      </p>
-                    </div>
-
-                    <div>
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {project.tags.slice(0, 4).map((t) => (
-                          <span
-                            key={t}
-                            className="text-xs font-mono text-neutral-500 border border-neutral-800 px-2 py-1 bg-black"
-                          >
-                            #{t}
+                      <div className="p-5 border-b border-neutral-800/80 bg-neutral-950/20 flex justify-between items-start">
+                        <div className="flex gap-2">
+                          <div
+                            className={`w-2.5 h-2.5 rounded-full ${project.color} shadow-[0_0_0_4px_rgba(255,255,255,0.02)]`}
+                          ></div>
+                          <span className="text-[11px] uppercase tracking-[0.25em] font-bold text-neutral-400">
+                            {project.type[language]}
                           </span>
-                        ))}
-                        {project.tags.length > 4 && (
-                          <span className="text-xs font-mono text-neutral-500 px-2 py-1">
-                            ...
-                          </span>
-                        )}
+                        </div>
+                        <span
+                          className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${project.status === "completed"
+                            ? "border-lime-400/40 text-lime-400 bg-lime-400/5"
+                            : "border-yellow-500/40 text-yellow-500 bg-yellow-500/5"
+                            }`}
+                        >
+                          {project.status === "completed"
+                            ? t.projects.statusCompleted
+                            : t.projects.statusDev}
+                        </span>
                       </div>
 
-                      <motion.button
-                        onClick={() => setSelectedProject(project)}
-                        whileHover={{ x: 5 }}
-                        className="inline-flex items-center gap-2 text-white font-bold uppercase text-xs tracking-widest hover:text-lime-400"
-                      >
-                        {t.projects.viewDetails} <ExternalLink size={14} />
-                      </motion.button>
-                    </div>
-                  </div>
-                  {/* Hard Shadow for brutalist feel */}
-                  <motion.div
-                    className="absolute inset-0 border-2 border-lime-400 opacity-0 pointer-events-none"
-                    whileHover={{ opacity: 1, x: 8, y: 8 }}
-                    transition={{ duration: 0.2 }}
-                  />
-                </motion.article>
-              ))}
+                      <div className="p-7 md:p-8 relative flex-grow flex flex-col justify-between">
+                        <div>
+                          <h3 className="text-2xl font-black mb-4 tracking-tighter group-hover:text-lime-400 transition-colors duration-300">
+                            {project.title}
+                          </h3>
+                          <p className="text-neutral-400 mb-6 font-sans leading-relaxed text-sm max-w-[28ch] min-h-[4.5rem]">
+                            {project.description[language]}
+                          </p>
+                        </div>
+
+                        <div>
+                          <div className="flex flex-wrap gap-2 mb-6">
+                            {project.tags.slice(0, 4).map((t) => (
+                              <span
+                                key={t}
+                                className="text-[11px] font-mono text-neutral-400 border border-neutral-800/80 px-2.5 py-1 bg-black/40 rounded-full"
+                              >
+                                #{t}
+                              </span>
+                            ))}
+                            {project.tags.length > 4 && (
+                              <span className="text-[11px] font-mono text-neutral-500 px-2 py-1">
+                                ...
+                              </span>
+                            )}
+                          </div>
+
+                        <motion.button
+                            onClick={() => setSelectedProject(project)}
+                            whileHover={{ x: 3 }}
+                            className="cursor-pointer inline-flex items-center gap-2 rounded-full border border-neutral-700 px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-white hover:border-lime-400 hover:text-lime-400 transition-colors"
+                          >
+                            {t.projects.viewDetails} <ExternalLink size={14} />
+                          </motion.button>
+                        </div>
+                      </div>
+                    </motion.article>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -1307,7 +1130,7 @@ const DevPortfolio = () => {
         {/* Testimonials Section */}
         <section
           id="testimonials"
-          className="py-24 bg-neutral-900 border-t-2 border-neutral-800"
+          className="py-24 bg-neutral-950 border-t-2 border-neutral-800"
         >
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -1322,7 +1145,7 @@ const DevPortfolio = () => {
                 </h2>
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-black border border-neutral-700 p-6 group hover:border-lime-400 transition-colors duration-300"
+                  className={`${panelClass} p-6 group hover:border-lime-400 transition-colors duration-300`}
                 >
                   <div className="text-5xl font-black text-lime-400 mb-2">
                     4.8<span className="text-lg text-white">/5</span>
@@ -1359,8 +1182,8 @@ const DevPortfolio = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.1 }}
-                      whileHover={{ y: -5, backgroundColor: "#262626" }}
-                      className="bg-neutral-800 p-6 border-l-4 border-lime-400"
+                      whileHover={{ y: -5 }}
+                      className={`${panelClass} p-6 border-l-4 border-lime-400`}
                     >
                       <div className="flex gap-1 mb-3">
                         {[...Array(t.stars)].map((_, i) => (
@@ -1386,31 +1209,19 @@ const DevPortfolio = () => {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-24 bg-lime-400 text-black relative">
-          <div className="absolute top-0 left-0 w-full overflow-hidden leading-none rotate-180">
-            <svg
-              data-name="Layer 1"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1200 120"
-              preserveAspectRatio="none"
-              className="relative block w-full h-[40px] fill-neutral-900"
-            >
-              <path d="M1200 120L0 16.48 0 0 1200 0 1200 120z"></path>
-            </svg>
-          </div>
-
-          <div className="container mx-auto px-4 mt-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <section id="contact" className="py-24 bg-neutral-950 text-white relative border-t-2 border-neutral-800">
+          <div className="container mx-auto px-4">
+            <div className={`grid grid-cols-1 lg:grid-cols-2 gap-16 ${panelClass} p-6 md:p-10`}>
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-5xl md:text-7xl font-black mb-8 leading-none">
+                <h2 className="text-5xl md:text-7xl font-black mb-8 leading-none tracking-tighter">
                   {t.contact.title1}
                   <br />{t.contact.title2}
                 </h2>
-                <p className="text-xl font-bold mb-12 max-w-md">
+                <p className="text-xl text-neutral-400 mb-12 max-w-md">
                   {t.contact.subtitle}
                 </p>
 
@@ -1418,9 +1229,9 @@ const DevPortfolio = () => {
                   <motion.a
                     whileHover={{ x: 10 }}
                     href={`mailto:${personalData.email}`}
-                    className="flex items-center gap-4 text-xl md:text-2xl font-black group"
+                    className="flex items-center gap-4 text-xl md:text-2xl font-black group cursor-pointer"
                   >
-                    <Mail className="border-2 border-black p-2 w-12 h-12 bg-white group-hover:bg-black group-hover:text-lime-400 transition-colors duration-300" />
+                    <Mail className="border border-neutral-700 p-2 w-12 h-12 rounded-2xl bg-black/40 group-hover:bg-lime-400 group-hover:text-black transition-colors duration-300" />
                     {personalData.email}
                   </motion.a>
                   <motion.a
@@ -1428,9 +1239,9 @@ const DevPortfolio = () => {
                     href={`https://linkedin.com/in/${personalData.linkedin}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-4 text-xl md:text-2xl font-black group"
+                    className="flex items-center gap-4 text-xl md:text-2xl font-black group cursor-pointer"
                   >
-                    <Linkedin className="border-2 border-black p-2 w-12 h-12 bg-white group-hover:bg-black group-hover:text-lime-400 transition-colors duration-300" />
+                    <Linkedin className="border border-neutral-700 p-2 w-12 h-12 rounded-2xl bg-black/40 group-hover:bg-lime-400 group-hover:text-black transition-colors duration-300" />
                     /in/{personalData.linkedin}
                   </motion.a>
                   <motion.a
@@ -1438,9 +1249,9 @@ const DevPortfolio = () => {
                     href={`https://github.com/${personalData.github}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-4 text-xl md:text-2xl font-black group"
+                    className="flex items-center gap-4 text-xl md:text-2xl font-black group cursor-pointer"
                   >
-                    <Github className="border-2 border-black p-2 w-12 h-12 bg-white group-hover:bg-black group-hover:text-lime-400 transition-colors duration-300" />
+                    <Github className="border border-neutral-700 p-2 w-12 h-12 rounded-2xl bg-black/40 group-hover:bg-lime-400 group-hover:text-black transition-colors duration-300" />
                     @{personalData.github}
                   </motion.a>
                 </div>
@@ -1451,10 +1262,10 @@ const DevPortfolio = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 whileHover={{
-                  boxShadow: "12px 12px 0px 0px #ffffff",
-                  translate: "4px 4px",
+                  boxShadow: "0 24px 80px rgba(0,0,0,0.35)",
+                  translate: "0px 2px",
                 }}
-                className="bg-black p-8 border-2 border-white shadow-[8px_8px_0px_0px_#ffffff] transition-all"
+                className="p-0 transition-all"
               >
                 <h3 className="text-white text-xl font-bold mb-6 flex items-center gap-2">
                   <Zap size={20} className="text-lime-400" /> {t.contact.startTransmission}
@@ -1471,7 +1282,7 @@ const DevPortfolio = () => {
                       value={formData.from_name}
                       onChange={handleInputChange}
                       required
-                      className="w-full bg-neutral-900 border border-neutral-700 text-white p-4 focus:border-lime-400 focus:outline-none focus:bg-neutral-800 transition-colors font-mono"
+                      className="w-full bg-neutral-950 border border-neutral-700 text-white p-4 rounded-2xl focus:border-lime-400 focus:outline-none focus:bg-neutral-900 transition-colors font-mono"
                       placeholder={t.contact.placeholderName}
                     />
                   </div>
@@ -1485,7 +1296,7 @@ const DevPortfolio = () => {
                       value={formData.reply_to}
                       onChange={handleInputChange}
                       required
-                      className="w-full bg-neutral-900 border border-neutral-700 text-white p-4 focus:border-lime-400 focus:outline-none focus:bg-neutral-800 transition-colors font-mono"
+                      className="w-full bg-neutral-950 border border-neutral-700 text-white p-4 rounded-2xl focus:border-lime-400 focus:outline-none focus:bg-neutral-900 transition-colors font-mono"
                       placeholder={t.contact.placeholderEmail}
                     />
                   </div>
@@ -1499,17 +1310,17 @@ const DevPortfolio = () => {
                       onChange={handleInputChange}
                       rows="4"
                       required
-                      className="w-full bg-neutral-900 border border-neutral-700 text-white p-4 focus:border-lime-400 focus:outline-none focus:bg-neutral-800 transition-colors font-mono"
-                      placeholder={t.contact.placeholderMsg}
-                    ></textarea>
-                  </div>
+                    className="w-full bg-neutral-950 border border-neutral-700 text-white p-4 rounded-2xl focus:border-lime-400 focus:outline-none focus:bg-neutral-900 transition-colors font-mono"
+                    placeholder={t.contact.placeholderMsg}
+                  ></textarea>
+                </div>
 
                   <motion.button
                     whileHover={{ scale: 1.02, backgroundColor: "#ffffff" }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={formStatus === "submitting"}
-                    className="w-full bg-lime-400 text-black font-black py-4 flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer w-full bg-lime-400 text-black font-black py-4 flex items-center justify-center gap-2 mt-4 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {formStatus === "submitting" ? (
                       <>
@@ -1530,7 +1341,7 @@ const DevPortfolio = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="bg-green-500/10 border border-green-500 text-green-500 p-3 flex items-center gap-2 text-sm font-bold mt-2"
+                        className="bg-green-500/10 border border-green-500 text-green-500 p-3 flex items-center gap-2 text-sm font-bold mt-2 rounded-2xl"
                       >
                         <CheckCircle size={16} /> {formMessage}
                       </motion.div>
@@ -1540,7 +1351,7 @@ const DevPortfolio = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="bg-red-500/10 border border-red-500 text-red-500 p-3 flex items-center gap-2 text-sm font-bold mt-2"
+                        className="bg-red-500/10 border border-red-500 text-red-500 p-3 flex items-center gap-2 text-sm font-bold mt-2 rounded-2xl"
                       >
                         <AlertCircle size={16} /> {formMessage}
                       </motion.div>
@@ -1554,15 +1365,10 @@ const DevPortfolio = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black text-neutral-500 py-8 text-center text-xs border-t border-neutral-800">
-        <p>{t.footer.text}</p>
-        <div className="flex justify-center gap-4 mt-4 text-lime-400 font-bold">
-          <span className="hover:underline cursor-pointer">REACT</span>
-          <span>//</span>
-          <span className="hover:underline cursor-pointer">FRAMER MOTION</span>
-          <span>//</span>
-          <span className="hover:underline cursor-pointer">NEO-BRUTALISM</span>
-        </div>
+      <footer className="bg-black text-neutral-500 py-8 px-4 text-center text-[11px] sm:text-xs md:text-sm border-t border-neutral-800">
+        <p className="mx-auto max-w-xs sm:max-w-md leading-relaxed">
+          {t.footer.text}
+        </p>
       </footer>
 
       {/* Modal with AnimatePresence */}
@@ -1582,15 +1388,15 @@ const DevPortfolio = () => {
               animate="visible"
               exit="exit"
               onClick={(e) => e.stopPropagation()}
-              className="bg-neutral-900 border-2 border-lime-400 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative shadow-[8px_8px_0px_0px_rgba(163,230,53,1)]"
+              className="w-full max-w-3xl max-h-[90vh] overflow-y-auto relative rounded-[2rem] border border-neutral-800 bg-neutral-900/95 backdrop-blur-sm shadow-[0_24px_80px_rgba(0,0,0,0.35)]"
             >
-              <div className="sticky top-0 bg-neutral-900/95 backdrop-blur border-b-2 border-neutral-800 p-4 flex justify-between items-center z-10">
-                <h3 className="text-xl md:text-2xl font-black text-lime-400">
+              <div className="sticky top-0 bg-neutral-950/90 backdrop-blur border-b border-neutral-800 p-4 md:p-5 flex justify-between items-center z-10 rounded-t-[2rem]">
+                <h3 className="text-xl md:text-2xl font-black text-lime-400 tracking-tighter">
                   {selectedProject.title}
                 </h3>
                 <button
                   onClick={() => setSelectedProject(null)}
-                  className="text-neutral-400 hover:text-white transition-colors bg-black border-2 border-transparent hover:border-lime-400 p-1"
+                  className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-full border border-neutral-800 bg-black/40 text-neutral-400 hover:border-lime-400 hover:text-white transition-colors"
                 >
                   <X size={24} />
                 </button>
@@ -1599,20 +1405,20 @@ const DevPortfolio = () => {
               <div className="p-6 md:p-8">
                 <div className="flex flex-wrap gap-2 mb-6">
                   <span
-                    className={`text-[10px] font-bold px-2 py-0.5 border ${selectedProject.status === "completed"
-                      ? "border-lime-400 text-lime-400"
-                      : "border-yellow-500 text-yellow-500"
+                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${selectedProject.status === "completed"
+                      ? "border-lime-400/40 text-lime-400 bg-lime-400/5"
+                      : "border-yellow-500/40 text-yellow-500 bg-yellow-500/5"
                       }`}
                   >
                     {selectedProject.status === "completed" ? t.projects.statusCompleted : t.projects.statusDev}
                   </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 border border-neutral-700 text-neutral-400">
+                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-neutral-700 text-neutral-400">
                     {selectedProject.type[language]}
                   </span>
                 </div>
 
                 <div className="mb-8">
-                  <h4 className="text-lg font-bold mb-4 text-white block border-b border-neutral-800 pb-2">
+                  <h4 className="text-lg font-bold mb-4 text-white block border-b border-neutral-800 pb-2 tracking-tight">
                     <span className="text-lime-400">//</span> {t.projects.about}
                   </h4>
                   <p className="text-neutral-300 font-sans leading-relaxed whitespace-pre-line text-sm md:text-base">
@@ -1621,14 +1427,14 @@ const DevPortfolio = () => {
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-bold mb-4 text-white block border-b border-neutral-800 pb-2">
+                  <h4 className="text-lg font-bold mb-4 text-white block border-b border-neutral-800 pb-2 tracking-tight">
                     <span className="text-lime-400">//</span> {t.projects.tech}
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedProject.tags.map((t) => (
                       <span
                         key={t}
-                        className="text-sm font-mono text-lime-400 border border-lime-400 px-3 py-1 bg-black"
+                        className="text-sm font-mono text-lime-400 border border-lime-400/40 px-3 py-1 rounded-full bg-lime-400/5"
                       >
                         {t}
                       </span>
@@ -1644,7 +1450,7 @@ const DevPortfolio = () => {
                       rel="noreferrer"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="bg-lime-400 text-black px-6 py-2 font-black uppercase flex items-center gap-2 border-2 border-transparent hover:bg-lime-500 transition-colors text-sm"
+                      className="cursor-pointer rounded-full bg-lime-400 text-black px-6 py-2 font-black uppercase flex items-center gap-2 border border-transparent hover:bg-lime-500 transition-colors text-sm"
                     >
                       {t.projects.visit} <Globe size={16} />
                     </motion.a>
@@ -1661,7 +1467,7 @@ const DevPortfolio = () => {
                       rel="noreferrer"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="bg-neutral-100 text-black px-6 py-2 font-black uppercase flex items-center gap-2 border-2 border-lime-400 hover:bg-white transition-colors text-sm"
+                      className="cursor-pointer rounded-full bg-neutral-100 text-black px-6 py-2 font-black uppercase flex items-center gap-2 border border-lime-400 hover:bg-white transition-colors text-sm"
                     >
                       {t.projects.wantOne} <MessageCircle size={16} />
                     </motion.a>
@@ -1670,7 +1476,7 @@ const DevPortfolio = () => {
                   <motion.button
                     whileHover={{ x: 5 }}
                     onClick={() => setSelectedProject(null)}
-                    className="text-white font-bold flex items-center gap-2 hover:text-lime-400 ml-auto"
+                    className="cursor-pointer rounded-full border border-neutral-700 px-4 py-2 text-white font-bold flex items-center gap-2 hover:text-lime-400 ml-auto"
                   >
                     {t.projects.close} <ArrowRight size={16} />
                   </motion.button>
