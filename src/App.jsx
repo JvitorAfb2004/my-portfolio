@@ -27,10 +27,12 @@ import {
 } from "lucide-react";
 
 const DevPortfolio = () => {
+  const [isBooting, setIsBooting] = useState(true);
   const [language, setLanguage] = useState("en");
   const [activeSection, setActiveSection] = useState("home");
   const [selectedProject, setSelectedProject] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeServiceIndex, setActiveServiceIndex] = useState(0);
   const projectsSectionRef = useRef(null);
   const projectsScrollRef = useRef(null);
   const panelClass =
@@ -83,6 +85,59 @@ const DevPortfolio = () => {
         responseTime: "Response Time",
         timeUnit: "24h",
       },
+      positioning: {
+        label: "// WHAT I BUILD",
+        title1: "SERVICES",
+        title2: "& PROCESS",
+        intro:
+          "I build products that need real operation, not just pretty screens. End-to-end delivery focused on product clarity, performance and maintenance.",
+        servicesTitle: "MAIN OFFERS",
+        processTitle: "HOW I WORK",
+        services: [
+          {
+            title: "SaaS & Platforms",
+            description:
+              "Complete products with authentication, business rules, dashboards, subscriptions and continuous evolution.",
+          },
+          {
+            title: "Apps & Admin Panels",
+            description:
+              "Web and mobile applications connected to real operation, from customer flow to internal backoffice.",
+          },
+          {
+            title: "Integrations & Automation",
+            description:
+              "Payments, notifications, third-party APIs, operational automations and critical system connections.",
+          },
+        ],
+        process: [
+          {
+            title: "Diagnosis",
+            description:
+              "I map the real problem, the product flow and the technical constraints before building anything.",
+          },
+          {
+            title: "Build",
+            description:
+              "I implement the core delivery with focus on stable architecture, clean UI and business logic that holds up in production.",
+          },
+          {
+            title: "Evolution",
+            description:
+              "After launch, I keep refining the product with maintenance, new features and technical direction.",
+          },
+        ],
+      },
+      cases: {
+        label: "// SUCCESS CASES",
+        title1: "REAL",
+        title2: "OUTCOMES",
+        intro:
+          "Selected products where the value is not just in the stack, but in solving real operational problems with software that holds up in production.",
+        problem: "Problem",
+        solution: "Solution",
+        result: "Result",
+      },
       projects: {
         label: "// FULL PORTFOLIO",
         title: "PROJECTS",
@@ -109,10 +164,10 @@ const DevPortfolio = () => {
         title2: "THE NEXT LEVEL?",
         subtitle:
           "Get in touch to discuss your next project. I reply within 24h.",
-        startTransmission: "START TRANSMISSION",
-        nameLabel: "IDENTITY // NAME",
-        emailLabel: "FREQUENCY // EMAIL",
-        msgLabel: "PAYLOAD // MESSAGE",
+        startTransmission: "SEND YOUR MESSAGE",
+        nameLabel: "NAME",
+        emailLabel: "EMAIL",
+        msgLabel: "MESSAGE",
         sending: "SENDING DATA...",
         send: "SEND MESSAGE",
         success: "Message sent successfully! I will contact you soon.",
@@ -127,9 +182,9 @@ const DevPortfolio = () => {
         text: "Developed with hate and caffeine. © 2026 JOÃO VITOR.",
       },
       meta: {
-        title: "João Vitor | Fullstack Developer React, Vue and Node.js",
+        title: "João Vitor Alves Fernandes Barros | JvitorAFB Fullstack Developer",
         description:
-          "Freelance Fullstack Developer specialized in React, Vue, Node.js and AI automation. I create scalable web systems and high-performance apps.",
+          "João Vitor Alves Fernandes Barros, also known as Jvitor and JvitorAFB, is a fullstack developer specialized in React, Vue, Node.js, TypeScript and scalable web applications.",
       },
     },
     pt: {
@@ -167,6 +222,59 @@ const DevPortfolio = () => {
         responseTime: "Tempo de Resposta",
         timeUnit: "24h",
       },
+      positioning: {
+        label: "// O QUE EU CONSTRUO",
+        title1: "SERVIÇOS",
+        title2: "& PROCESSO",
+        intro:
+          "Construo produtos que precisam operar de verdade, não só telas bonitas. Entrega ponta a ponta com foco em clareza de produto, performance e manutenção.",
+        servicesTitle: "PRINCIPAIS ENTREGAS",
+        processTitle: "COMO EU TRABALHO",
+        services: [
+          {
+            title: "SaaS & Plataformas",
+            description:
+              "Produtos completos com autenticação, regras de negócio, dashboards, assinaturas e evolução contínua.",
+          },
+          {
+            title: "Apps & Painéis",
+            description:
+              "Aplicações web e mobile conectadas à operação real, do fluxo do cliente ao backoffice interno.",
+          },
+          {
+            title: "Integrações & Automação",
+            description:
+              "Pagamentos, notificações, APIs de terceiros, automações operacionais e conexões críticas entre sistemas.",
+          },
+        ],
+        process: [
+          {
+            title: "Diagnóstico",
+            description:
+              "Mapeio o problema real, o fluxo do produto e as restrições técnicas antes de construir qualquer coisa.",
+          },
+          {
+            title: "Construção",
+            description:
+              "Implemento a entrega principal com foco em arquitetura estável, interface limpa e regra de negócio que aguenta produção.",
+          },
+          {
+            title: "Evolução",
+            description:
+              "Depois do lançamento, sigo refinando o produto com manutenção, novas features e direção técnica.",
+          },
+        ],
+      },
+      cases: {
+        label: "// CASES DE SUCESSO",
+        title1: "RESULTADOS",
+        title2: "REAIS",
+        intro:
+          "Produtos selecionados em que o valor não está só na stack, mas na resolução de problemas operacionais reais com software que sustenta produção.",
+        problem: "Problema",
+        solution: "Solução",
+        result: "Resultado",
+      },
       projects: {
         label: "// PORTFÓLIO COMPLETO",
         title: "PROJETOS",
@@ -193,10 +301,10 @@ const DevPortfolio = () => {
         title2: "O PRÓXIMO NÍVEL?",
         subtitle:
           "Entre em contato para conversarmos sobre seu próximo projeto. Respondo em até 24h.",
-        startTransmission: "INICIAR TRANSMISSÃO",
-        nameLabel: "IDENTIDADE // NOME",
-        emailLabel: "FREQUÊNCIA // EMAIL",
-        msgLabel: "PAYLOAD // MENSAGEM",
+        startTransmission: "ENVIE SUA MENSAGEM",
+        nameLabel: "NOME",
+        emailLabel: "EMAIL",
+        msgLabel: "MENSAGEM",
         sending: "ENVIANDO DADOS...",
         send: "ENVIAR MENSAGEM",
         success: "Mensagem enviada com sucesso! Entrarei em contato em breve.",
@@ -211,9 +319,9 @@ const DevPortfolio = () => {
         text: "Desenvolvido com ódio e cafeína. © 2026 JOÃO VITOR.",
       },
       meta: {
-        title: "João Vitor | Desenvolvedor Fullstack React, Vue e Node.js",
+        title: "João Vitor Alves Fernandes Barros | JvitorAFB Desenvolvedor Fullstack",
         description:
-          "Desenvolvedor Fullstack freelancer especializado em React, Vue, Node.js e automações com IA. Crio sistemas web escaláveis e apps de alta performance.",
+          "João Vitor Alves Fernandes Barros, também conhecido como Jvitor e JvitorAFB, é desenvolvedor fullstack especializado em React, Vue, Node.js, TypeScript e aplicações web escaláveis.",
       },
     },
   };
@@ -222,7 +330,7 @@ const DevPortfolio = () => {
 
   // SEO & Schema Data
   const personalData = {
-    name: "JOÃO VITOR",
+    name: "João Vitor Alves Fernandes Barros",
     role: "FULLSTACK DEV",
     url: "https://www.joaovitorafb.site",
     image: "https://www.joaovitorafb.site/assets/3394.jpg",
@@ -238,6 +346,13 @@ const DevPortfolio = () => {
     "@context": "https://schema.org",
     "@type": "Person",
     name: personalData.name,
+    alternateName: [
+      "João Vitor Alves",
+      "Joao Vitor Alves",
+      "Jvitor",
+      "JvitorAFB",
+      "jooa vitor alves fernandes barros",
+    ],
     jobTitle: "Fullstack Developer",
     url: personalData.url,
     sameAs: [
@@ -256,6 +371,14 @@ const DevPortfolio = () => {
   };
 
   // Atualiza Título, Meta Description e Favicon dinamicamente
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setIsBooting(false);
+    }, 1500);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
   useEffect(() => {
     // 1. Title
     // eslint-disable-next-line react-hooks/immutability
@@ -293,17 +416,34 @@ const DevPortfolio = () => {
 
   const projectsData = [
     {
+      id: 21,
+      title: "GLOWAPP",
+      link: "https://yourglowapp.co/",
+      description: {
+        pt: "Marketplace internacional de beleza com serviços, chat, booking e fluxos para profissionais e clientes.",
+        en: "International beauty marketplace with services, chat, booking and dedicated flows for professionals and clients.",
+      },
+      longDescription: {
+        pt: "Marketplace internacional de beleza, em desenvolvimento para o mercado europeu, com suporte a PT-PT e EN. A plataforma centraliza descoberta de profissionais, vitrine de serviços avulsos, chat interno, fluxo de booking, feed de publicações, vagas, eventos e espaços comerciais para locação dentro do mesmo ecossistema. Atuo como desenvolvedor fullstack responsável pela construção da aplicação e pela condução das principais entregas técnicas do produto.",
+        en: "International beauty marketplace in development for the European market, with PT-PT and EN support. The platform centralizes professional discovery, service listings, in-app chat, booking flows, a social feed, job opportunities, events and rentable commercial spaces within the same ecosystem. I work as the fullstack developer responsible for building the application and leading the product's main technical deliveries.",
+      },
+      tags: ["Vue", "Firebase", "TypeScript"],
+      status: "dev",
+      type: { pt: "APP", en: "APP" },
+      color: "bg-fuchsia-500",
+    },
+    {
       id: 1,
       title: "VET ANESTHESIA PRO",
       link: "https://vetanesthesiapro.com/",
       saas: true,
       description: {
-        pt: "SaaS para clínicas veterinárias. Gestão completa de anestesias com alta precisão.",
-        en: "SaaS for veterinary clinics. Complete anesthesia management with high precision.",
+        pt: "Software clínico veterinário para anestesia, com cálculo, monitoramento e rastreabilidade do procedimento.",
+        en: "Veterinary clinical software for anesthesia, with dosage calculation, monitoring and procedure traceability.",
       },
       longDescription: {
-        pt: "Este projeto foi desenvolvido para resolver a complexidade do cálculo e monitoramento de anestesias em procedimentos veterinários. A plataforma oferece uma interface intuitiva para os anestesistas registrarem sinais vitais em tempo real, calcularem dosagens de fármacos com base em protocolos pré-definidos e gerarem relatórios detalhados.",
-        en: "This project was developed to solve the complexity of calculating and monitoring anesthesia in veterinary procedures. The platform offers an intuitive interface for anesthetists to register vital signs in real time, calculate drug dosages based on pre-defined protocols and generate detailed reports.",
+        pt: "Software clínico veterinário desenvolvido para atender anestesistas, clínicas e hospitais em toda a jornada anestésica. A plataforma cobre cálculo de dosagens, monitoramento intraoperatório, padronização de protocolos, geração de relatórios clínicos e rastreabilidade completa das informações do procedimento. Atuei na construção completa do produto, consolidando uma solução SaaS especializada para um nicho com exigência alta de precisão e segurança.",
+        en: "Veterinary clinical software built for anesthetists, clinics and hospitals across the entire anesthesia workflow. The platform covers dosage calculation, intraoperative monitoring, protocol standardization, clinical reporting and full traceability of procedure data. I worked on the complete product delivery, shaping a specialized SaaS solution for a niche with high demands for precision and safety.",
       },
       tags: ["React", "Supabase", "Vercel", "Tailwind"],
       status: "completed",
@@ -311,56 +451,46 @@ const DevPortfolio = () => {
       color: "bg-blue-500",
     },
     {
-      id: 19,
-      title: "FORUM VET ANESTHESIA",
-      link: "https://forum.vetanesthesiapro.com/",
-      description: {
-        pt: "Fórum dedicado à comunidade veterinária para discussão de casos e protocolos.",
-        en: "Forum dedicated to the veterinary community for discussing cases and protocols.",
-      },
-      longDescription: {
-        pt: "Plataforma de comunidade para veterinários trocarem experiências, discutirem casos complexos de anestesia e compartilharem protocolos. Em desenvolvimento constante.",
-        en: "Community platform for veterinarians to exchange experiences, discuss complex anesthesia cases and share protocols. Under constant development.",
-      },
-      tags: ["Next.js", "Supabase", "Redis", "Postgres", "Google OAuth"],
-      status: "completed",
-      type: { pt: "COMMUNITY", en: "COMMUNITY" },
-      color: "bg-blue-400",
-    },
-    {
       id: 20,
       title: "NEXO DELIVERY",
       link: "https://nexodelivery.app/",
       saas: true,
       description: {
-        pt: "Sistema completo de delivery para restaurantes e marketplaces com app mobile e painéis web.",
-        en: "Complete delivery system for restaurants and marketplaces with mobile app and web dashboards.",
+        pt: "Plataforma de delivery para restaurantes com tracking em tempo real, backend central e repasse automatizado.",
+        en: "Delivery platform for restaurants with real-time tracking, a central backend and automated payment transfers.",
       },
       longDescription: {
-        pt: "Solução end-to-end para gestão de pedidos, rastreamento em tempo real e painel de administração para restaurante e lojistas. Stack integrada com React Native, Next.js, Node.js, Redis, PostgreSQL, AbacatePay e Docker.",
-        en: "End-to-end platform for order management, real-time tracking and administrative dashboards for restaurants and merchants. Built with React Native, Next.js, Node.js, Redis, PostgreSQL, AbacatePay and Docker.",
+        pt: "Plataforma de delivery desenvolvida para centralizar a operação de restaurantes, com backend central, app mobile para lojistas e entregadores, painel web operacional e painel administrativo. O sistema cobre simulação, criação, aceite, coleta, conclusão, tracking público em tempo real e repasse automatizado, melhorando a gestão do lojista e facilitando a rotina dos entregadores sem o peso das taxas abusivas de plataformas tradicionais.",
+        en: "Delivery platform built to centralize restaurant operations, with a central backend, mobile apps for merchants and couriers, a web operations dashboard and an admin panel. The system covers simulation, creation, acceptance, pickup, completion, public real-time tracking and automated payment transfers, improving management for merchants and simplifying the daily workflow for couriers without the burden of abusive fees from traditional platforms.",
       },
       tags: ["React Native", "Next.js", "Node.js", "Redis", "PostgreSQL", "AbacatePay", "Docker"],
       status: "completed",
       type: { pt: "DELIVERY", en: "DELIVERY" },
       color: "bg-lime-500",
     },
-
     {
-      id: 3,
-      title: "CARRO DIGITAL",
+      id: 7,
+      title: "ACHEICASA.NET",
+      link: "https://acheicasa.net/",
       description: {
-        pt: "Ecossistema com Loja Virtual e consultas veiculares em tempo real.",
-        en: "Ecosystem with Virtual Store and real-time vehicle consultations.",
+        pt: "Portal imobiliário com busca avançada, painel completo, mapas e apoio de IA na publicação.",
+        en: "Real estate platform with advanced search, a full management panel, maps and AI-assisted listing creation.",
       },
       longDescription: {
-        pt: "Ecossistema que une loja virtual de autopeças a serviço de consulta veicular. App em React Native para experiência nativa e versão web em Vue.js. Backend robusto em Node.js.",
-        en: "Ecosystem that unites auto parts virtual store with vehicle consultation service. React Native app for native experience and Vue.js web version. Robust Node.js backend.",
+        pt: "Portal imobiliário completo para compra, aluguel e leilão, reunindo busca avançada, páginas de anúncio com mídia rica, mapa, street view, tour 360 e painel completo para publicação, edição, destaque e gestão dos imóveis. O fluxo de publicação conta com apoio de IA para estruturar título e descrição a partir de texto livre, enquanto a monetização via assinaturas roda em produção com Banco Efí. Fui responsável por toda a construção do produto, incluindo front-end, back-end, integrações, infraestrutura e manutenção contínua.",
+        en: "Complete real estate platform for sales, rentals and auctions, combining advanced search, rich media property pages, maps, street view, 360 tours and a full dashboard for publishing, editing, highlighting and managing listings. The publishing flow uses AI support to structure titles and descriptions from free-form text, while subscription monetization runs in production through Banco Efi. I was responsible for the entire product build, including front-end, back-end, integrations, infrastructure and ongoing maintenance.",
       },
-      tags: ["React Native", "Vue", "Node.js", "MySQL"],
+      tags: [
+        "Nuxt SSR",
+        "Node.js",
+        "Banco Efí",
+        "Postgres",
+        "Docker",
+        "Easypanel",
+      ],
       status: "completed",
-      type: { pt: "MOBILE/WEB", en: "MOBILE/WEB" },
-      color: "bg-purple-500",
+      type: { pt: "REAL ESTATE", en: "REAL ESTATE" },
+      color: "bg-cyan-500",
     },
     {
       id: 4,
@@ -397,30 +527,6 @@ const DevPortfolio = () => {
       color: "bg-orange-500",
     },
     {
-      id: 7,
-      title: "ACHEICASA.NET",
-      link: "https://acheicasa.net/",
-      description: {
-        pt: "Portal de busca e anúncios de imóveis.",
-        en: "Real estate search and advertisement portal.",
-      },
-      longDescription: {
-        pt: "Portal imobiliário completo com filtros avançados de busca, mapas interativos e integração com Mercado Pago para destaque de anúncios.",
-        en: "Complete real estate portal with advanced search filters, interactive maps and Mercado Pago integration for ad highlighting.",
-      },
-      tags: [
-        "Nuxt SSR",
-        "Node.js",
-        "Mercado Pago",
-        "Postgres",
-        "Docker",
-        "Easypanel",
-      ],
-      status: "completed",
-      type: { pt: "REAL ESTATE", en: "REAL ESTATE" },
-      color: "bg-cyan-500",
-    },
-    {
       id: 8,
       title: "GYMSOFTWARE",
       description: {
@@ -437,38 +543,21 @@ const DevPortfolio = () => {
       color: "bg-red-500",
     },
     {
-      id: 9,
-      title: "BOTYT",
+      id: 19,
+      title: "FORUM VET ANESTHESIA",
+      link: "https://forum.vetanesthesiapro.com/",
       description: {
-        pt: "Bot para publicação automática com interface e múltiplos canais.",
-        en: "Bot for automatic publication with interface and multiple channels.",
+        pt: "Fórum dedicado à comunidade veterinária para discussão de casos e protocolos.",
+        en: "Forum dedicated to the veterinary community for discussing cases and protocols.",
       },
       longDescription: {
-        pt: "Ferramenta de automação para criadores de conteúdo, permitindo agendamento e publicação automática em múltiplos canais simultaneamente.",
-        en: "Automation tool for content creators, allowing scheduling and automatic publication on multiple channels simultaneously.",
+        pt: "Plataforma de comunidade para veterinários trocarem experiências, discutirem casos complexos de anestesia e compartilharem protocolos. Em desenvolvimento constante.",
+        en: "Community platform for veterinarians to exchange experiences, discuss complex anesthesia cases and share protocols. Under constant development.",
       },
-      tags: ["Vue", "Node.js", "MySQL"],
+      tags: ["Next.js", "Supabase", "Redis", "Postgres", "Google OAuth"],
       status: "completed",
-      type: { pt: "AUTOMATION", en: "AUTOMATION" },
-      color: "bg-pink-500",
-    },
-
-
-    {
-      id: 12,
-      title: "ALERTAS FUTEBOL",
-      description: {
-        pt: "Backend para alertas em tempo real de partidas de futebol.",
-        en: "Backend for real-time soccer match alerts.",
-      },
-      longDescription: {
-        pt: "Serviço de backend de alta performance que monitora partidas de futebol e envia notificações push em tempo real via Redis.",
-        en: "High-performance backend service that monitors soccer matches and sends push notifications in real time via Redis.",
-      },
-      tags: ["Node.js", "Redis", "PostgreSQL"],
-      status: "completed",
-      type: { pt: "BACKEND", en: "BACKEND" },
-      color: "bg-green-600",
+      type: { pt: "COMMUNITY", en: "COMMUNITY" },
+      color: "bg-blue-400",
     },
     {
       id: 13,
@@ -607,6 +696,57 @@ const DevPortfolio = () => {
     },
   ];
 
+  const successCases = [
+    {
+      id: "glowapp-case",
+      title: "GLOWAPP",
+      problem: {
+        pt: "Profissionais e clientes de beleza precisavam de uma plataforma única para descoberta de serviços, comunicação e booking em um contexto internacional.",
+        en: "Beauty professionals and clients needed a single platform for service discovery, communication and booking in an international context.",
+      },
+      solution: {
+        pt: "Desenvolvimento de um marketplace multilíngue com perfis distintos para profissionais e clientes, vitrine de serviços, chat interno, booking, jobs, eventos e spaces dentro do mesmo ecossistema.",
+        en: "Built a multilingual marketplace with dedicated flows for professionals and clients, combining service listings, in-app chat, booking, jobs, events and spaces within the same ecosystem.",
+      },
+      result: {
+        pt: "Base digital centralizada para operar múltiplos fluxos do mercado de beleza em uma única plataforma internacional.",
+        en: "A centralized digital foundation to operate multiple beauty-market workflows inside a single international platform.",
+      },
+    },
+    {
+      id: "nexo-case",
+      title: "NEXO DELIVERY",
+      problem: {
+        pt: "Restaurantes precisavam centralizar a gestão das entregas e reduzir o atrito operacional sem depender de plataformas com taxas pesadas.",
+        en: "Restaurants needed to centralize delivery management and reduce operational friction without relying on platforms with heavy fees.",
+      },
+      solution: {
+        pt: "Construção de uma plataforma completa com backend central, app para lojistas e entregadores, painel web operacional, tracking em tempo real e repasse automatizado.",
+        en: "Built a complete platform with a central backend, apps for merchants and couriers, a web operations dashboard, real-time tracking and automated payment transfers.",
+      },
+      result: {
+        pt: "Operação mais centralizada para o lojista, rotina mais simples para os entregadores e modelo mais viável para restaurantes sem taxas abusivas.",
+        en: "A more centralized operation for merchants, a simpler workflow for couriers and a more viable model for restaurants without abusive fees.",
+      },
+    },
+    {
+      id: "acheicasa-case",
+      title: "ACHEICASA.NET",
+      problem: {
+        pt: "O mercado precisava de uma experiência mais robusta para publicar, gerenciar e encontrar imóveis, sem fluxos limitados ou publicação manual desorganizada.",
+        en: "The market needed a stronger experience to publish, manage and discover properties without limited flows or disorganized manual publishing.",
+      },
+      solution: {
+        pt: "Desenvolvimento fullstack completo da plataforma, com busca avançada, painel de gestão, páginas de anúncio ricas em mídia, integração com mapas, IA na publicação e assinaturas com Banco Efí.",
+        en: "Delivered the platform end-to-end, with advanced search, management dashboards, rich media listing pages, map integrations, AI-assisted publishing and Banco Efi subscriptions.",
+      },
+      result: {
+        pt: "Plataforma imobiliária em produção com operação centralizada para anunciantes, experiência de busca mais rica e fluxo de publicação mais eficiente.",
+        en: "A production real estate platform with centralized operations for advertisers, richer search experiences and a more efficient publishing flow.",
+      },
+    },
+  ];
+
   // Configuração de Animações Framer Motion
   const fadeInUp = {
     hidden: { opacity: 0, y: 60 },
@@ -721,8 +861,62 @@ const DevPortfolio = () => {
     });
   };
 
+  useEffect(() => {
+    const services = t.positioning.services;
+    if (!services?.length) return;
+
+    const intervalId = window.setInterval(() => {
+      setActiveServiceIndex((prev) => (prev + 1) % services.length);
+    }, 4500);
+
+    return () => window.clearInterval(intervalId);
+  }, [t.positioning.services]);
+
+  useEffect(() => {
+    setActiveServiceIndex(0);
+  }, [language]);
+
+  const handleServiceNavigation = (direction) => {
+    const services = t.positioning.services;
+    if (!services?.length) return;
+
+    setActiveServiceIndex((prev) => {
+      if (direction > 0) return (prev + 1) % services.length;
+      return (prev - 1 + services.length) % services.length;
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-neutral-900 text-neutral-100 font-mono selection:bg-lime-400 selection:text-black overflow-x-hidden relative">
+    <div className="min-h-screen bg-neutral-950 text-neutral-100 font-mono selection:bg-lime-400 selection:text-black overflow-x-hidden relative">
+      <AnimatePresence>
+        {isBooting && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.45, ease: "easeOut" } }}
+            className="fixed inset-0 z-[120] flex items-center justify-center bg-neutral-950"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.88, y: 12 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                rotate: [0, -5, 5, 0],
+              }}
+              transition={{
+                duration: 0.8,
+                ease: [0.22, 1, 0.36, 1],
+                rotate: { duration: 1.4, repeat: Infinity, ease: "easeInOut" },
+              }}
+              className="flex h-24 w-24 items-center justify-center rounded-[2rem] border border-lime-400/30 bg-lime-400 text-black shadow-[0_24px_70px_rgba(163,230,53,0.18)]"
+            >
+              <Terminal size={40} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* JSON-LD Script para SEO */}
       <script
         type="application/ld+json"
@@ -737,10 +931,10 @@ const DevPortfolio = () => {
 
       {/* Background Pattern */}
       <div
-        className="fixed inset-0 z-0 opacity-10 pointer-events-none"
+        className="fixed inset-0 z-0 opacity-[0.14] pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(#3f3f46 1px, transparent 1px), linear-gradient(90deg, #3f3f46 1px, transparent 1px)",
+            "linear-gradient(#27272a 1px, transparent 1px), linear-gradient(90deg, #27272a 1px, transparent 1px)",
           backgroundSize: "40px 40px",
         }}
       ></div>
@@ -912,7 +1106,7 @@ const DevPortfolio = () => {
 
               <motion.h1
                 variants={fadeInUp}
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none mb-6 tracking-tighter"
+                className="text-5xl sm:text-6xl md:text-[5.5rem] lg:text-[7.2rem] font-black leading-none mb-6 tracking-tighter"
               >
                 JOAO VITOR
                 <br />
@@ -924,7 +1118,7 @@ const DevPortfolio = () => {
 
               <motion.p
                 variants={fadeInUp}
-                className="text-lg md:text-2xl text-neutral-400 max-w-2xl mb-10"
+                className="text-lg md:text-[1.7rem] text-neutral-400 max-w-2xl mb-10"
               >
                 {t.hero.description}
               </motion.p>
@@ -994,8 +1188,202 @@ const DevPortfolio = () => {
           </motion.div>
         </div>
 
-        {/* Stack Section (simplificado) */}
-        <section className="py-4 bg-neutral-900 border-t-2 border-neutral-800"></section>
+        <section className="py-24 bg-neutral-900 border-t-2 border-neutral-800">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-14 max-w-4xl"
+            >
+              <span className="text-lime-400 font-bold block mb-3">
+                {t.positioning.label}
+              </span>
+              <h2 className="text-4xl md:text-6xl font-black text-white leading-none tracking-tighter mb-6">
+                {t.positioning.title1}
+                <br />
+                <span className="text-neutral-400">{t.positioning.title2}</span>
+              </h2>
+              <p className="text-neutral-400 text-lg md:text-xl max-w-3xl">
+                {t.positioning.intro}
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className={`${panelClass} p-6 md:p-8`}
+              >
+                <div className="flex items-center justify-between gap-4 mb-6">
+                  <h3 className="text-xl md:text-2xl font-black text-white">
+                    {t.positioning.servicesTitle}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleServiceNavigation(-1)}
+                      aria-label="Previous service"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-800 bg-black/20 text-neutral-400 transition-colors hover:border-lime-400 hover:text-lime-400"
+                    >
+                      <ArrowRight size={16} className="rotate-180" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleServiceNavigation(1)}
+                      aria-label="Next service"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-800 bg-black/20 text-neutral-400 transition-colors hover:border-lime-400 hover:text-lime-400"
+                    >
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="rounded-[1.75rem] border border-neutral-800 bg-black/20 p-6 md:p-8 min-h-[280px] flex flex-col justify-between">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`${language}-${activeServiceIndex}`}
+                      initial={{ opacity: 0, y: 18 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -18 }}
+                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                      className="flex-1"
+                    >
+                      <div className="text-lime-400 text-xs font-black tracking-[0.25em] mb-4">
+                        0{activeServiceIndex + 1}
+                      </div>
+                      <p className="text-white font-black text-2xl md:text-4xl mb-5 tracking-tight max-w-xl">
+                        {t.positioning.services[activeServiceIndex].title}
+                      </p>
+                      <p className="text-neutral-400 text-base md:text-lg leading-relaxed font-sans max-w-2xl">
+                        {t.positioning.services[activeServiceIndex].description}
+                      </p>
+                    </motion.div>
+                  </AnimatePresence>
+
+                  <div className="mt-8 flex items-center gap-2">
+                    {t.positioning.services.map((item, index) => (
+                      <button
+                        key={item.title}
+                        type="button"
+                        aria-label={`Go to ${item.title}`}
+                        onClick={() => setActiveServiceIndex(index)}
+                        className={`h-2.5 rounded-full transition-all ${
+                          index === activeServiceIndex
+                            ? "w-10 bg-lime-400"
+                            : "w-2.5 bg-neutral-700 hover:bg-neutral-500"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className={`${panelClass} p-6 md:p-8`}
+              >
+                <h3 className="text-xl md:text-2xl font-black text-white mb-6">
+                  {t.positioning.processTitle}
+                </h3>
+                <div className="space-y-4">
+                  {t.positioning.process.map((item, index) => (
+                    <div
+                      key={item.title}
+                      className="rounded-[1.5rem] border border-neutral-800 bg-black/20 p-5"
+                    >
+                      <div className="text-lime-400 text-xs font-black tracking-[0.25em] mb-2">
+                        0{index + 1}
+                      </div>
+                      <p className="text-white font-black text-lg mb-2 tracking-tight">
+                        {item.title}
+                      </p>
+                      <p className="text-neutral-400 text-sm leading-relaxed font-sans">
+                        {item.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 bg-neutral-950 border-t-2 border-neutral-800">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-14 max-w-4xl"
+            >
+              <span className="text-lime-400 font-bold block mb-3">
+                {t.cases.label}
+              </span>
+              <h2 className="text-4xl md:text-6xl font-black text-white leading-none tracking-tighter mb-6">
+                {t.cases.title1}
+                <br />
+                <span className="text-neutral-400">{t.cases.title2}</span>
+              </h2>
+              <p className="text-neutral-400 text-lg md:text-xl max-w-3xl">
+                {t.cases.intro}
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              {successCases.map((item, index) => (
+                <motion.article
+                  key={item.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.08 }}
+                  className={`${panelClass} p-6 md:p-7 flex flex-col gap-6`}
+                >
+                  <div>
+                    <div className="text-lime-400 text-xs font-black tracking-[0.25em] mb-3">
+                      CASE 0{index + 1}
+                    </div>
+                    <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">
+                      {item.title}
+                    </h3>
+                  </div>
+
+                  <div className="rounded-[1.5rem] border border-neutral-800 bg-black/20 p-5">
+                    <p className="text-neutral-500 text-[11px] uppercase tracking-[0.25em] font-black mb-3">
+                      {t.cases.problem}
+                    </p>
+                    <p className="text-neutral-300 font-sans text-sm leading-relaxed">
+                      {item.problem[language]}
+                    </p>
+                  </div>
+
+                  <div className="rounded-[1.5rem] border border-neutral-800 bg-black/20 p-5">
+                    <p className="text-neutral-500 text-[11px] uppercase tracking-[0.25em] font-black mb-3">
+                      {t.cases.solution}
+                    </p>
+                    <p className="text-neutral-300 font-sans text-sm leading-relaxed">
+                      {item.solution[language]}
+                    </p>
+                  </div>
+
+                  <div className="rounded-[1.5rem] border border-lime-400/30 bg-lime-400/5 p-5">
+                    <p className="text-lime-400 text-[11px] uppercase tracking-[0.25em] font-black mb-3">
+                      {t.cases.result}
+                    </p>
+                    <p className="text-white font-sans text-sm leading-relaxed">
+                      {item.result[language]}
+                    </p>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Projects Section */}
         <section
@@ -1060,7 +1448,8 @@ const DevPortfolio = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-50px" }}
                       transition={{ delay: index * 0.05 }}
-                      className="group relative overflow-hidden rounded-[1.75rem] bg-neutral-900/90 border border-neutral-800 hover:border-neutral-600 transition-all duration-300 flex flex-col h-[24rem] min-w-[300px] md:min-w-[360px] snap-start shadow-[0_16px_50px_rgba(0,0,0,0.28)]"
+                      onClick={() => setSelectedProject(project)}
+                      className="group relative overflow-hidden rounded-[1.75rem] bg-neutral-900/90 border border-neutral-800 hover:border-neutral-600 transition-all duration-300 flex flex-col h-[24rem] min-w-[300px] md:min-w-[360px] snap-start shadow-[0_16px_50px_rgba(0,0,0,0.28)] cursor-pointer"
                     >
                       <div className="p-5 border-b border-neutral-800/80 bg-neutral-950/20 flex justify-between items-start">
                         <div className="flex gap-2">
@@ -1111,7 +1500,10 @@ const DevPortfolio = () => {
                           </div>
 
                         <motion.button
-                            onClick={() => setSelectedProject(project)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedProject(project);
+                            }}
                             whileHover={{ x: 3 }}
                             className="cursor-pointer inline-flex items-center gap-2 rounded-full border border-neutral-700 px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-white hover:border-lime-400 hover:text-lime-400 transition-colors"
                           >
@@ -1363,6 +1755,25 @@ const DevPortfolio = () => {
           </div>
         </section>
       </main>
+
+      <motion.a
+        href={`https://wa.me/${personalData.whatsapp}?text=${encodeURIComponent(
+          language === "pt"
+            ? "Olá, vim do seu portfólio e gostaria de conversar."
+            : "Hello, I came from your portfolio and would like to talk."
+        )}`}
+        target="_blank"
+        rel="noreferrer"
+        whileHover={{
+          scale: 1.06,
+          boxShadow: "0 20px 45px rgba(163,230,53,0.28)",
+        }}
+        whileTap={{ scale: 0.96 }}
+        aria-label="Abrir conversa no WhatsApp"
+        className="fixed right-4 bottom-4 z-[70] flex h-14 w-14 items-center justify-center rounded-full border border-lime-400/50 bg-lime-400 text-black shadow-[0_18px_40px_rgba(163,230,53,0.2)] transition-colors hover:bg-lime-300 md:right-6 md:bottom-6"
+      >
+        <MessageCircle size={24} />
+      </motion.a>
 
       {/* Footer */}
       <footer className="bg-black text-neutral-500 py-8 px-4 text-center text-[11px] sm:text-xs md:text-sm border-t border-neutral-800">
