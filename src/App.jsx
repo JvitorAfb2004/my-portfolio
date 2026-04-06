@@ -1403,8 +1403,8 @@ const DevPortfolio = () => {
             </motion.div>
 
             <div className="relative p-0 md:p-2">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-7 rounded-l-[2rem] bg-gradient-to-r from-neutral-950 via-neutral-950/70 to-transparent z-10"></div>
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-7 rounded-r-[2rem] bg-gradient-to-l from-neutral-950 via-neutral-950/70 to-transparent z-10"></div>
+              <div className="pointer-events-none absolute inset-y-0 left-0 hidden md:block w-7 rounded-l-[2rem] bg-gradient-to-r from-neutral-950 via-neutral-950/70 to-transparent z-10"></div>
+              <div className="pointer-events-none absolute inset-y-0 right-0 hidden md:block w-7 rounded-r-[2rem] bg-gradient-to-l from-neutral-950 via-neutral-950/70 to-transparent z-10"></div>
               <button
                 type="button"
                 onClick={() => scrollProjects(-1)}
