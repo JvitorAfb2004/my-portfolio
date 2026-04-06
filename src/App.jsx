@@ -65,7 +65,6 @@ const DevPortfolio = () => {
           "Specialist in React, Vue and Node.js. I create custom, scalable and high-performance web systems and apps.",
         viewPortfolio: "VIEW PORTFOLIO",
         quote: "GET A QUOTE",
-        downloadCV: "DOWNLOAD CV",
         systemActive: "SYSTEM: ACTIVE",
         clients: "CLIENTS",
         satisfied: "15+ SATISFIED",
@@ -202,7 +201,6 @@ const DevPortfolio = () => {
           "Especialista em React, Vue e Node.js. Crio sistemas web e apps sob medida, escaláveis e de alta performance.",
         viewPortfolio: "VER PORTFÓLIO",
         quote: "ORÇAMENTO",
-        downloadCV: "BAIXAR CV",
         systemActive: "SYSTEM: ACTIVE",
         clients: "CLIENTES",
         satisfied: "15+ SATISFEITOS",
@@ -1157,19 +1155,6 @@ const DevPortfolio = () => {
                   {t.hero.quote}
                 </motion.button>
 
-                <motion.a
-                  href="/Curriculo%20JOAO%20VITOR%20ALVES%20FERNANDES%20BARROS.pdf"
-                  download="Curriculo-JoaoVitor.pdf"
-                  whileHover={{
-                    scale: 1.05,
-                    backgroundColor: "#ffffff",
-                    color: "#000000",
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  className="cursor-pointer rounded-full px-8 py-4 bg-black/20 text-white font-bold text-lg border border-neutral-700 transition-colors flex items-center justify-center gap-2"
-                >
-                  {t.hero.downloadCV} <ExternalLink size={20} className="rotate-180" />
-                </motion.a>
               </motion.div>
             </motion.div>
           </div>
