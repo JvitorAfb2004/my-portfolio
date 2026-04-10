@@ -257,24 +257,16 @@ const HomePage = () => {
             <p className="text-sm text-neutral-400">{personalData.role}</p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <a
-              href="/v2"
-              className="rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:border-lime-300/40 hover:text-lime-200"
-            >
-              Ver versão técnica
-            </a>
-            <a
-              href={`https://wa.me/${personalData.whatsapp}?text=${encodeURIComponent(
-                "Olá, vim do seu site e queria conversar sobre um projeto."
-              )}`}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-lime-300 px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
-            >
-              Conversar
-            </a>
-          </div>
+          <a
+            href={`https://wa.me/${personalData.whatsapp}?text=${encodeURIComponent(
+              "Olá, vim do seu site e queria conversar sobre um projeto."
+            )}`}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full bg-lime-300 px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
+          >
+            Conversar
+          </a>
         </div>
       </header>
 
@@ -282,10 +274,6 @@ const HomePage = () => {
         <section className="border-b border-white/10">
           <div className="mx-auto grid min-h-[calc(100vh-76px)] max-w-6xl gap-8 px-4 py-10 sm:px-6 sm:py-12 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-10 lg:px-8 lg:py-14">
             <motion.div {...fadeInUp} className="max-w-3xl">
-              <p className="mb-5 text-sm uppercase tracking-[0.28em] text-lime-300/80">
-                Sites, sistemas e produto digital
-              </p>
-
               <h1 className="max-w-4xl text-4xl font-semibold leading-[0.92] tracking-[-0.06em] text-white sm:text-5xl lg:text-[4.35rem]">
                 Faço presença digital e software com cara profissional e uso
                 real.
