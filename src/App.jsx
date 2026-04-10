@@ -178,7 +178,7 @@ const DevPortfolio = () => {
         placeholderMsg: "Describe your mission...",
       },
       footer: {
-        text: "Developed with hate and caffeine. © 2026 JOÃO VITOR.",
+        text: "By GeniusWeb",
       },
       meta: {
         title: "João Vitor Alves Fernandes Barros | JvitorAFB Fullstack Developer",
@@ -314,7 +314,7 @@ const DevPortfolio = () => {
         placeholderMsg: "Descreva sua missão...",
       },
       footer: {
-        text: "Desenvolvido com ódio e cafeína. © 2026 JOÃO VITOR.",
+        text: "By GeniusWeb",
       },
       meta: {
         title: "João Vitor Alves Fernandes Barros | JvitorAFB Desenvolvedor Fullstack",
@@ -335,7 +335,7 @@ const DevPortfolio = () => {
     email: "jvitorafb@gmail.com",
     github: "JvitorAfb2004",
     linkedin: "jvitorafb",
-    whatsapp: "5574999835227",
+    whatsapp: "55749999425993",
     formAction: "https://formspree.io/f/movdqyyo",
   };
 
@@ -378,20 +378,76 @@ const DevPortfolio = () => {
   }, []);
 
   useEffect(() => {
-    // 1. Title
+    const seo = {
+      title: t.meta.title,
+      description: t.meta.description,
+      url: "https://www.joaovitorafb.site/v2",
+      image: "https://www.joaovitorafb.site/og-image.png",
+    };
+
+    const ensureMeta = (selector, attributes) => {
+      let element = document.querySelector(selector);
+
+      if (!element) {
+        element = document.createElement("meta");
+        Object.entries(attributes).forEach(([key, value]) => {
+          element.setAttribute(key, value);
+        });
+        document.head.appendChild(element);
+      }
+
+      return element;
+    };
+
+    const ensureLink = (selector, attributes) => {
+      let element = document.querySelector(selector);
+
+      if (!element) {
+        element = document.createElement("link");
+        Object.entries(attributes).forEach(([key, value]) => {
+          element.setAttribute(key, value);
+        });
+        document.head.appendChild(element);
+      }
+
+      return element;
+    };
+
     // eslint-disable-next-line react-hooks/immutability
-    document.title = t.meta.title;
+    document.title = seo.title;
 
-    // 2. Meta Description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement("meta");
-      metaDesc.name = "description";
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.setAttribute("content", t.meta.description);
+    ensureMeta('meta[name="description"]', { name: "description" }).setAttribute(
+      "content",
+      seo.description
+    );
+    ensureMeta('meta[property="og:title"]', { property: "og:title" }).setAttribute(
+      "content",
+      seo.title
+    );
+    ensureMeta('meta[property="og:description"]', {
+      property: "og:description",
+    }).setAttribute("content", seo.description);
+    ensureMeta('meta[property="og:url"]', { property: "og:url" }).setAttribute(
+      "content",
+      seo.url
+    );
+    ensureMeta('meta[property="og:image"]', {
+      property: "og:image",
+    }).setAttribute("content", seo.image);
+    ensureMeta('meta[name="twitter:title"]', {
+      name: "twitter:title",
+    }).setAttribute("content", seo.title);
+    ensureMeta('meta[name="twitter:description"]', {
+      name: "twitter:description",
+    }).setAttribute("content", seo.description);
+    ensureMeta('meta[name="twitter:image"]', {
+      name: "twitter:image",
+    }).setAttribute("content", seo.image);
+    ensureLink('link[rel="canonical"]', { rel: "canonical" }).setAttribute(
+      "href",
+      seo.url
+    );
 
-    // 3. Favicon Injection
     const existingIcons = document.querySelectorAll("link[rel*='icon']");
     existingIcons.forEach((icon) => icon.remove());
 
@@ -400,7 +456,7 @@ const DevPortfolio = () => {
     link.rel = "shortcut icon";
     link.href = "/favicon.png";
     document.head.appendChild(link);
-  }, [language, t.meta.title, t.meta.description]); // Update when language changes
+  }, [language, t.meta.title, t.meta.description]);
 
   const navItems = useMemo(
     () => [
@@ -1763,7 +1819,16 @@ const DevPortfolio = () => {
       {/* Footer */}
       <footer className="bg-black text-neutral-500 py-8 px-4 text-center text-[11px] sm:text-xs md:text-sm border-t border-neutral-800">
         <p className="mx-auto max-w-xs sm:max-w-md leading-relaxed">
-          {t.footer.text}
+          By{" "}
+          <a
+            href="https://geniusweb.online/v2"
+            target="_blank"
+            rel="noreferrer"
+            className="transition-colors hover:text-lime-400"
+          >
+            GeniusWeb
+          </a>{" "}
+          · CNPJ: 66.107.006/0001-70
         </p>
       </footer>
 
