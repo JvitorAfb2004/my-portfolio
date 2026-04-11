@@ -272,7 +272,7 @@ const HomePage = () => {
 
       <main className="relative z-10">
         <section className="border-b border-white/10">
-          <div className="mx-auto grid min-h-[calc(100vh-76px)] max-w-6xl gap-8 px-4 py-10 sm:px-6 sm:py-12 lg:grid-cols-[1.3fr_0.7fr] lg:items-center lg:gap-10 lg:px-8 lg:py-14">
+          <div className="mx-auto grid min-h-[calc(100vh-76px)] max-w-6xl gap-8 px-4 py-10 sm:px-6 sm:py-12 lg:grid-cols-[1.3fr_0.7fr] lg:items-start lg:gap-10 lg:px-8 lg:py-14">
             <motion.div {...fadeInUp} className="max-w-3xl">
               <h1 className="max-w-4xl text-4xl font-semibold leading-[0.92] tracking-[-0.06em] text-white sm:text-5xl lg:text-[4.35rem]">
                 Faço presença digital e software com cara profissional e uso
