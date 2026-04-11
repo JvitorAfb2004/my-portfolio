@@ -311,7 +311,7 @@ const HomePage = () => {
             <motion.div
               {...fadeInUp}
               transition={{ ...fadeInUp.transition, delay: 0.08 }}
-              className="flex flex-col justify-between border border-white/10 bg-white/[0.03] p-5 sm:p-6 lg:self-stretch"
+              className="flex h-fit flex-col border border-white/10 bg-white/[0.03] p-5 sm:p-6 lg:self-start"
             >
               <div>
                 <p className="text-sm uppercase tracking-[0.28em] text-neutral-500">
