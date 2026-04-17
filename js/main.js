@@ -3,7 +3,29 @@
    JavaScript Principal — GSAP + ScrollTrigger
    ======================================================== */
 
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+/* ----------------------------------------------------------
+   FAILSAFE DE EMERGÊNCIA
+   Fecha o loader em até 5 s usando apenas JS nativo.
+   Garante que o site nunca trave, mesmo se o CDN falhar.
+---------------------------------------------------------- */
+(function () {
+  var _t = setTimeout(function () {
+    var l = document.getElementById('loader');
+    if (l && l.style.display !== 'none') {
+      l.style.transition = 'opacity 0.6s ease';
+      l.style.opacity    = '0';
+      setTimeout(function () { l.style.display = 'none'; }, 700);
+    }
+  }, 5000);
+  window.__loaderFailsafe = _t;
+}());
+
+/* ----------------------------------------------------------
+   GSAP: registra plugins somente se o CDN carregou
+---------------------------------------------------------- */
+if (typeof gsap !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+}
 
 /* ============================================================
    1. LOADER CINEMATOGRÁFICO
@@ -11,8 +33,16 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const initLoader = () => {
   const loader = document.getElementById('loader');
-  const bar = document.getElementById('loaderBar');
-  const text = document.getElementById('loaderText');
+  const bar    = document.getElementById('loaderBar');
+  const text   = document.getElementById('loaderText');
+
+  // Se GSAP não disponível, CSS + failsafe JS cuidam do dismiss
+  if (typeof gsap === 'undefined') return;
+
+  // Cancela o failsafe JS e a animação CSS — GSAP assume o controle
+  clearTimeout(window.__loaderFailsafe);
+  loader.style.animation = 'none';
+  bar.style.animation    = 'none';
 
   const messages = ['Carregando experiência...', 'Preparando animações...', 'Quase lá...'];
   let msgIndex = 0;

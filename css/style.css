@@ -38,6 +38,17 @@ body {
 
 /* ===================== LOADER ===================== */
 
+/* Fallback: auto-fecha o loader se JS/GSAP não carregar */
+@keyframes loader-autodismiss {
+  0%, 95% { opacity: 1; visibility: visible; }
+  100%     { opacity: 0; visibility: hidden;  }
+}
+
+@keyframes loader-bar-progress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
 .loader {
   position: fixed;
   inset: 0;
@@ -47,6 +58,8 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  /* CSS failsafe: dispara após 5 s se GSAP não assumir */
+  animation: loader-autodismiss 0.8s ease forwards 5s;
 }
 
 .loader-inner {
@@ -78,7 +91,8 @@ body {
   background: var(--neon);
   border-radius: 99px;
   box-shadow: 0 0 12px var(--neon-glow);
-  transition: width 0.1s linear;
+  /* CSS fallback para a barra */
+  animation: loader-bar-progress 2s ease-in-out forwards;
 }
 
 .loader-text {
