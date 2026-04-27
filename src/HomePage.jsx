@@ -235,6 +235,32 @@ const HomePage = () => {
     schemaScript.textContent = JSON.stringify(structuredData);
   }, []);
 
+  useEffect(() => {
+    const hashToSection = {
+      projetos: "projetos",
+      servicos: "servicos",
+    };
+
+    const scrollToHashSection = () => {
+      const rawHash = window.location.hash.replace("#", "").trim().toLowerCase();
+      if (!rawHash) return;
+
+      const targetId = hashToSection[rawHash] || rawHash;
+      const targetSection = document.getElementById(targetId);
+      if (!targetSection) return;
+
+      targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    const timeoutId = window.setTimeout(scrollToHashSection, 120);
+    window.addEventListener("hashchange", scrollToHashSection);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener("hashchange", scrollToHashSection);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0a0d0b] text-neutral-100 selection:bg-lime-300 selection:text-black">
       <div
@@ -299,10 +325,10 @@ const HomePage = () => {
                 </a>
 
                 <a
-                  href="/v2"
+                  href="#projetos"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-lime-300/40 hover:text-lime-200"
                 >
-                  Ver portfólio técnico
+                  Ver projetos
                   <ArrowRight2 size={18} variant="Bulk" color="#ffffff" />
                 </a>
               </div>
@@ -351,7 +377,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="border-b border-white/10">
+        <section id="servicos" className="border-b border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
             <motion.div {...fadeInUp} className="max-w-2xl">
               <p className="text-sm uppercase tracking-[0.28em] text-lime-300/80">
@@ -383,7 +409,7 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="border-b border-white/10">
+        <section id="projetos" className="border-b border-white/10">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
             <motion.div
               {...fadeInUp}
@@ -399,10 +425,10 @@ const HomePage = () => {
               </div>
 
               <a
-                href="/v2"
+                href="#projetos"
                 className="inline-flex items-center gap-2 text-sm font-medium text-neutral-300 transition-colors hover:text-lime-200"
               >
-                Ver lista completa
+                Ver projetos
                 <ArrowRight2 size={18} variant="Bulk" color="#ffffff" />
               </a>
             </motion.div>
@@ -545,8 +571,8 @@ const HomePage = () => {
             · CNPJ: 66.107.006/0001-70
           </p>
           <div className="flex gap-5">
-            <a href="/v2" className="transition-colors hover:text-lime-200">
-              Versão técnica
+            <a href="#servicos" className="transition-colors hover:text-lime-200">
+              Serviços
             </a>
             <a
               href={`https://github.com/${personalData.github}`}
