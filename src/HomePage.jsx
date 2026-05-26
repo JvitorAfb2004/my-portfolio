@@ -138,7 +138,7 @@ const seo = {
   description:
     "João Vitor desenvolve sites, sistemas e produtos digitais para negócios que precisam transmitir mais confiança, organizar a operação e lançar com clareza.",
   url: "https://www.joaovitorafb.site/",
-  image: "https://www.joaovitorafb.site/og-image.png",
+  image: "https://www.joaovitorafb.site/og-image.webp",
 };
 
 const HomePage = () => {
