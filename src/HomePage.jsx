@@ -18,7 +18,7 @@ const personalData = {
   email: "jvitorafb@gmail.com",
   github: "JvitorAfb2004",
   linkedin: "jvitorafb",
-  whatsapp: "55749999425993",
+  whatsapp: "5574999835227",
 };
 
 const highlights = [
@@ -80,6 +80,60 @@ const featuredProjects = [
     description:
       "Ferramenta para criação e melhoria de currículo com apoio de inteligência artificial e foco em clareza profissional.",
     href: "https://curriculoproia.com/",
+  },
+];
+
+const testimonials = [
+  {
+    project: "App de anestesiologia veterinária",
+    text: "Excelente programador! Entregou antes do prazo final, muito comprometido e tem ótima comunicação. Continuarei trabalhando com ele no meu app futuramente, e certamente recomendaria para colegas!",
+    rating: 5.0,
+    period: "out–nov 2025",
+  },
+  {
+    project: "Sistema de gestão de inscrições",
+    text: "Profissional muito prestativo e competente.",
+    rating: 4.8,
+    period: "set 2025",
+  },
+  {
+    project: "App mobile para cadastro e pesquisa",
+    text: "super prestativo",
+    rating: 5.0,
+    period: "ago–set 2025",
+  },
+  {
+    project: "App com conexão WebSocket",
+    text: "Recomendo. Prestativo e tudo de acordo com o combinado",
+    rating: 5.0,
+    period: "set 2025",
+  },
+  {
+    project: "Portal de anúncios imobiliários",
+    text: "Excelente profissional!!! conhecimento e dominio incrível. Já trabalhei com diversos profissionais, mas o programador João se destaca. Pontual, dedicado, compreende o projeto, paciente e executa com agilidade e profissionalismo. Sem sombra de dúvida ganhou um cliente, espero seguir sempre com a parceria, não trocaria este profissional por nenhum da plataforma 99freelas.",
+    rating: 5.0,
+    period: "mar–jul 2025",
+  },
+];
+
+const successCases = [
+  {
+    name: "GlowApp",
+    problem: "Salão de beleza dependia 100% do WhatsApp pra agendar. Perdia cliente por falta de organização.",
+    solution: "App mobile + web com agendamento, catálogo de serviços e notificações push.",
+    result: "Dono passou a gerenciar tudo por um painel. Cliente agenda sozinho 24h.",
+  },
+  {
+    name: "Nexo Delivery",
+    problem: "Delivery local operava só por telefone. Dono não sabia quantos pedidos entrava por dia.",
+    solution: "Sistema web com cardápio, carrinho, checkout e painel de pedidos em tempo real.",
+    result: "Pedidos centralizados. Dono passou a ter visão clara do faturamento diário.",
+  },
+  {
+    name: "AcheiCasa.net",
+    problem: "Imobiliária usava planilha Excel e grupos de WhatsApp pra divulgar imóveis.",
+    solution: "Portal de anúncios com busca, filtros, fotos e formulário de contato direto com corretor.",
+    result: "Cliente 100% satisfeito. \"Não trocaria este profissional por nenhum da plataforma.\"",
   },
 ];
 
@@ -462,6 +516,97 @@ const HomePage = () => {
                     <LinkSquare size={16} variant="Outline" color="#ffffff" />
                   </span>
                 </motion.a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="depoimentos" className="border-b border-white/10">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+            <motion.div {...fadeInUp} className="max-w-2xl">
+              <p className="text-sm uppercase tracking-[0.28em] text-lime-300/80">
+                O que meus clientes dizem
+              </p>
+              <h2 className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-white sm:text-4xl">
+                Avaliações reais do 99Freelas
+              </h2>
+            </motion.div>
+
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {testimonials.map((t, index) => (
+                <motion.div
+                  key={t.project}
+                  {...fadeInUp}
+                  transition={{ ...fadeInUp.transition, delay: index * 0.06 }}
+                  className="flex flex-col border border-white/10 bg-white/[0.03] p-6"
+                >
+                  <div className="mb-4 flex items-center gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <span
+                        key={i}
+                        className={`text-sm ${i < Math.round(t.rating) ? "text-amber-400" : "text-neutral-600"}`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                    <span className="ml-2 text-xs text-neutral-500">{t.rating}</span>
+                  </div>
+                  <p className="flex-1 text-base leading-7 text-neutral-300 italic">
+                    "{t.text}"
+                  </p>
+                  <div className="mt-5 border-t border-white/10 pt-4">
+                    <p className="text-sm font-medium text-white">{t.project}</p>
+                    <p className="mt-1 text-xs text-neutral-500">{t.period}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="cases" className="border-b border-white/10">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+            <motion.div {...fadeInUp} className="max-w-2xl">
+              <p className="text-sm uppercase tracking-[0.28em] text-lime-300/80">
+                Resultados reais
+              </p>
+              <h2 className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-white sm:text-4xl">
+                Problema → Solução → Resultado
+              </h2>
+            </motion.div>
+
+            <div className="mt-12 grid gap-8 lg:grid-cols-3">
+              {successCases.map((c, index) => (
+                <motion.div
+                  key={c.name}
+                  {...fadeInUp}
+                  transition={{ ...fadeInUp.transition, delay: index * 0.06 }}
+                  className="border border-white/10 bg-white/[0.03] p-6"
+                >
+                  <p className="text-lg font-semibold tracking-[-0.03em] text-lime-300">
+                    {c.name}
+                  </p>
+                  <div className="mt-5 space-y-4">
+                    <div className="border-l-2 border-red-400/50 pl-3">
+                      <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+                        Problema
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-neutral-400">{c.problem}</p>
+                    </div>
+                    <div className="border-l-2 border-blue-400/50 pl-3">
+                      <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+                        Solução
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-neutral-400">{c.solution}</p>
+                    </div>
+                    <div className="border-l-2 border-lime-400/50 pl-3">
+                      <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+                        Resultado
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-neutral-400">{c.result}</p>
+                    </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
