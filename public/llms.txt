@@ -1,0 +1,27 @@
+# GeniusWeb / João Vitor
+
+> Site principal e portfólio técnico de João Vitor / GeniusWeb.
+
+## Páginas principais
+
+- [Home](https://www.joaovitorafb.site/): posicionamento, serviços, projetos em destaque e contato
+- [Portfólio técnico](https://www.joaovitorafb.site/v2): versão completa com stack, cases, projetos e formulário
+
+## Projetos em destaque
+
+- [Vet Anesthesia Pro](https://vetanesthesiapro.com/): SaaS clínico veterinário
+- [Nexo Delivery](https://nexodelivery.app/): plataforma de delivery com operação e tracking
+- [AcheiCasa.net](https://acheicasa.net/): portal imobiliário com IA no fluxo de publicação
+- [Currículo Pro IA](https://curriculoproia.com/): produto com IA para currículo
+- [GlowApp](https://yourglowapp.co/): marketplace internacional para profissionais de beleza
+
+## Contato
+
+- [WhatsApp](https://wa.me/55749999425993)
+- [LinkedIn](https://linkedin.com/in/jvitorafb)
+- [GitHub](https://github.com/JvitorAfb2004)
+
+## Empresa
+
+- GeniusWeb
+- CNPJ: 66.107.006/0001-70
