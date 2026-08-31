@@ -5,11 +5,13 @@
   --font-display: "Plus Jakarta Sans", sans-serif;
   --font-mono: "Inter", sans-serif;
   --color-brand-lime: #BEF500;
-  --color-brand-bg: #000;
-  --color-brand-surface: #0A0A0A;
-  --color-brand-border: rgba(255, 255, 255, 0.06);
-  --color-brand-gray: #A0A0A0;
-  --color-brand-light-gray: #6A6A6A;
+  --color-brand-bg: #F7F7F5;
+  --color-brand-surface: #FFFFFF;
+  --color-brand-border: rgba(17, 17, 17, 0.10);
+  --color-brand-gray: #555555;
+  --color-brand-light-gray: #777777;
+  --color-white: #111111;
+  --color-black: #FFFFFF;
 }
 
 @utility animate-gradient {
@@ -22,8 +24,8 @@
 }
 
 body {
-  background-color: #000;
-  color: #fff;
+  background-color: #F7F7F5;
+  color: #111;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -33,10 +35,10 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 0);
+  background-image: radial-gradient(rgba(17, 17, 17, 0.35) 1px, transparent 0);
   background-size: 24px 24px;
   opacity: 0.04;
-  mix-blend-mode: plus-lighter;
+  mix-blend-mode: multiply;
 }
 
 ::-webkit-scrollbar {
@@ -45,22 +47,22 @@ body::before {
 }
 
 ::-webkit-scrollbar-track {
-  background: #000;
+  background: #F7F7F5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid #000;
+  background: rgba(17, 17, 17, 0.20);
+  border: 2px solid #F7F7F5;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.28);
+  background: rgba(17, 17, 17, 0.35);
 }
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) #000;
+  scrollbar-color: rgba(17, 17, 17, 0.20) #F7F7F5;
 }
 
 .crosshair-cursor {
@@ -74,14 +76,14 @@ html {
   }
 
   .crosshair-cursor {
-    --cursor-stroke: rgba(255, 255, 255, 0.20);
+    --cursor-stroke: rgba(17, 17, 17, 0.20);
     --cursor-stroke-width: 1px;
     position: fixed;
     inset: 0;
     z-index: 9999;
     display: block;
     pointer-events: none;
-    mix-blend-mode: difference;
+    mix-blend-mode: multiply;
   }
 
   .crosshair-cursor__line {
@@ -124,10 +126,10 @@ html {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(17, 17, 17, 0.10);
 }
 
 .portfolio-card {
