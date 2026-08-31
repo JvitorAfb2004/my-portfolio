@@ -740,10 +740,13 @@ export default function App() {
                    <span className="font-mono text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
                      PLATAFORMA · DELIVERY
                    </span>
-                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
-                     EntregaBoy
-                   </h3>
-                   <a href="https://entregaboy.com.br" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                    <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
+                      EntregaBoy
+                    </h3>
+                    <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
+                      Plataforma de pedidos e entregas que conecta clientes, estabelecimentos e entregadores, simplificando a operação e acompanhando cada pedido em tempo real.
+                    </p>
+                    <a href="https://entregaboy.com.br" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
                      entregaboy.com.br <ArrowRight className="w-3.5 h-3.5" />
                    </a>
                  </div>
