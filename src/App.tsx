@@ -751,16 +751,26 @@ export default function App() {
 
                {/* AnunciCar - In development */}
                <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
-                 <div className="portfolio-media bg-[#F0F0EE] w-full flex items-center justify-center shrink-0 overflow-hidden">
-                   <span className="font-mono text-[13px] text-[#555555] uppercase tracking-[1.3px]">
-                     EM DESENVOLVIMENTO
-                   </span>
-                 </div>
-                 <div className="p-6 md:flex md:flex-col md:flex-grow">
-                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
-                     AnunciCar
-                   </h3>
-                 </div>
+                  <div className="portfolio-media bg-[#F0F0EE] w-full flex items-center justify-center shrink-0 overflow-hidden text-center">
+                    <span className="font-mono text-[13px] text-[#555555] uppercase tracking-[1.3px]">
+                      EM DESENVOLVIMENTO
+                    </span>
+                  </div>
+                  <div className="p-6 md:flex md:flex-col md:flex-grow">
+                    <span className="font-mono text-[14px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
+                      PLATAFORMA + APP · MÍDIA OOH
+                    </span>
+                    <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
+                      AnunciCar
+                    </h3>
+                    <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
+                      Plataforma e aplicativo de mídia OOH móvel que conecta marcas a motoristas, transformando veículos em canais de publicidade e criando novas oportunidades de renda.
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">TanStack</span>
+                      <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React Native</span>
+                    </div>
+                  </div>
                </div>
 
              </div>
