@@ -24,41 +24,8 @@ type TiltCardProps = React.HTMLAttributes<HTMLDivElement> & {
 };
 
 function TiltCard({ children, className, ...props }: TiltCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState({});
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const { left, top, width, height } = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - left - width / 2) / 25;
-    const y = (e.clientY - top - height / 2) / 25;
-
-    setStyle({
-      transform: `perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg)`,
-      transition: 'transform 0.1s ease',
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setStyle({
-      transform: 'perspective(1000px) rotateX(0) rotateY(0)',
-      transition: 'transform 0.5s ease',
-    });
-  };
-
   return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ ...style, transformStyle: 'preserve-3d', willChange: 'transform' }}
-      className={className}
-      {...props}
-    >
-      <div style={{ transform: 'translateZ(10px)' }} className="h-full">
-        {children}
-      </div>
-    </div>
+    <div className={className} {...props}>{children}</div>
   );
 }
 
@@ -331,17 +298,6 @@ export default function App() {
             },
           }
         );
-      });
-
-      gsap.utils.toArray<HTMLElement>('[data-hover-lift]').forEach((element) => {
-        const onEnter = () => gsap.to(element, { y: -8, scale: 1.01, duration: 0.28, ease: 'power2.out' });
-        const onLeave = () => gsap.to(element, { y: 0, scale: 1, duration: 0.35, ease: 'power2.out' });
-        element.addEventListener('mouseenter', onEnter);
-        element.addEventListener('mouseleave', onLeave);
-        hoverCleanups.push(() => {
-          element.removeEventListener('mouseenter', onEnter);
-          element.removeEventListener('mouseleave', onLeave);
-        });
       });
 
       // Set up Timeline for the Method Section scroll animation
@@ -817,7 +773,11 @@ export default function App() {
             <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[768px]">
               Quem já trabalhou comigo.
             </h2>
-            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 snap-x" data-stagger>
+            <div className="relative -mx-6 px-6">
+              <button type="button" aria-label="Ver depoimentos anteriores" className="absolute left-1 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-black/10 bg-white p-3 text-black shadow-sm md:block" onClick={() => document.getElementById('testimonials-list')?.scrollBy({ left: -420, behavior: 'smooth' })}>
+                <ArrowUp className="h-4 w-4 -rotate-90" />
+              </button>
+              <div id="testimonials-list" className="testimonials-scroll flex gap-6 overflow-x-auto pb-4 px-6 snap-x" data-stagger>
               {testimonialsData.map((t, i) => (
                 <TiltCard key={i} data-stagger-item className="min-w-[min(86vw,380px)] md:min-w-[380px] snap-start">
                   <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col">
@@ -836,6 +796,10 @@ export default function App() {
                   </div>
                 </TiltCard>
               ))}
+              </div>
+              <button type="button" aria-label="Ver próximos depoimentos" className="absolute right-1 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-black/10 bg-white p-3 text-black shadow-sm md:block" onClick={() => document.getElementById('testimonials-list')?.scrollBy({ left: 420, behavior: 'smooth' })}>
+                <ArrowUp className="h-4 w-4 rotate-90" />
+              </button>
             </div>
           </div>
         </section>

@@ -130,6 +130,24 @@ html {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(17, 17, 17, 0.10);
+  box-shadow: none !important;
+}
+
+.has-crosshair-cursor,
+.has-crosshair-cursor * {
+  cursor: auto !important;
+}
+
+.crosshair-cursor {
+  display: none !important;
+}
+
+.testimonials-scroll {
+  scrollbar-width: none;
+}
+
+.testimonials-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .portfolio-card {
