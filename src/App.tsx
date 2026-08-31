@@ -772,10 +772,42 @@ export default function App() {
                   <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
                     alugmotos.com.br <ArrowRight className="w-3.5 h-3.5" />
                   </a>
-                </div>
-              </div>
+                 </div>
+               </div>
 
-            </div>
+               {/* EntregaBoy - Small */}
+               <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+                 <div className="portfolio-media bg-[#111111] w-full flex items-center justify-center shrink-0 overflow-hidden">
+                   <img src="/icons/entregaboy.png" alt="EntregaBoy" loading="lazy" decoding="async" className="w-32 h-32 object-contain" />
+                 </div>
+                 <div className="p-6 md:flex md:flex-col md:flex-grow">
+                   <span className="font-mono text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
+                     PLATAFORMA · DELIVERY
+                   </span>
+                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
+                     EntregaBoy
+                   </h3>
+                   <a href="https://entregaboy.com.br" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                     entregaboy.com.br <ArrowRight className="w-3.5 h-3.5" />
+                   </a>
+                 </div>
+               </div>
+
+               {/* AnunciCar - In development */}
+               <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+                 <div className="portfolio-media bg-[#F0F0EE] w-full flex items-center justify-center shrink-0 overflow-hidden">
+                   <span className="font-mono text-[13px] text-[#555555] uppercase tracking-[1.3px]">
+                     EM DESENVOLVIMENTO
+                   </span>
+                 </div>
+                 <div className="p-6 md:flex md:flex-col md:flex-grow">
+                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
+                     AnunciCar
+                   </h3>
+                 </div>
+               </div>
+
+             </div>
           </div>
         </section>
 
@@ -785,9 +817,9 @@ export default function App() {
             <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[768px]">
               Quem já trabalhou comigo.
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start" data-stagger>
+            <div className="flex gap-6 overflow-x-auto pb-4 -mx-6 px-6 snap-x" data-stagger>
               {testimonialsData.map((t, i) => (
-                <TiltCard key={i} data-stagger-item>
+                <TiltCard key={i} data-stagger-item className="min-w-[min(86vw,380px)] md:min-w-[380px] snap-start">
                   <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col">
                     <div className="flex items-center justify-between mb-6">
                       <span className="font-mono text-[14px] text-white/40 uppercase tracking-[1.4px] leading-tight pr-2">
