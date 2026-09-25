@@ -14,15 +14,6 @@
   --color-black: #FFFFFF;
 }
 
-@utility animate-gradient {
-  animation: gradient-shift 4s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
 body {
   background-color: #F7F7F5;
   color: #111;
@@ -70,11 +61,6 @@ html {
 }
 
 @media (any-pointer: fine) {
-  .has-crosshair-cursor,
-  .has-crosshair-cursor * {
-    cursor: none !important;
-  }
-
   .crosshair-cursor {
     --cursor-stroke: rgba(17, 17, 17, 0.20);
     --cursor-stroke-width: 1px;
@@ -115,11 +101,6 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .has-crosshair-cursor,
-  .has-crosshair-cursor * {
-    cursor: auto !important;
-  }
-
   .crosshair-cursor {
     display: none;
   }
@@ -133,21 +114,62 @@ html {
   box-shadow: none !important;
 }
 
-.has-crosshair-cursor,
-.has-crosshair-cursor * {
-  cursor: auto !important;
-}
-
 .crosshair-cursor {
   display: none !important;
 }
 
-.testimonials-scroll {
-  scrollbar-width: none;
+/* Buttons and links: pointer cursor + subtle press depth */
+a[href],
+button,
+[role="button"] {
+  cursor: pointer;
+  transition: transform 0.18s ease, color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.testimonials-scroll::-webkit-scrollbar {
-  display: none;
+a[href]:active,
+button:active,
+[role="button"]:active {
+  transform: scale(0.97) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a[href]:active,
+  button:active,
+  [role="button"]:active {
+    transform: none !important;
+  }
+}
+
+/* Testimonials infinite marquee */
+.marquee {
+  overflow: hidden;
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee 45s linear infinite;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+.marquee__group {
+  display: flex;
+  gap: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    animation: none;
+  }
 }
 
 .portfolio-card {
@@ -160,14 +182,12 @@ html {
 .portfolio-media {
   position: relative;
   aspect-ratio: 16 / 9;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: auto;
   min-height: 192px;
-}
-
-.portfolio-media-large {
-  min-height: 260px;
 }
 
 .portfolio-image {
@@ -179,6 +199,26 @@ html {
   object-fit: cover;
 }
 
+.lift-card {
+  transition: transform 0.3s ease;
+}
+
+.lift-card:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(190, 245, 0, 0.45);
+  box-shadow: 0 16px 40px rgba(17, 17, 17, 0.10) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lift-card {
+    transition: none;
+  }
+
+  .lift-card:hover {
+    transform: none !important;
+  }
+}
+
 @media (min-width: 768px) {
   .portfolio-card {
     display: flex;
@@ -187,9 +227,5 @@ html {
   .portfolio-media {
     aspect-ratio: auto;
     height: 192px;
-  }
-
-  .portfolio-media-large {
-    height: 320px;
   }
 }

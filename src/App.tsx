@@ -92,6 +92,7 @@ export default function App() {
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
   const step3Ref = useRef<HTMLDivElement>(null);
+  const servicesGridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -219,14 +220,24 @@ export default function App() {
 
       if (reduceMotion) return;
 
-      gsap.from('[data-hero]', {
-        autoAlpha: 0,
-        y: 28,
-        filter: 'blur(8px)',
-        duration: 0.9,
-        ease: 'power3.out',
-        stagger: 0.12,
-      });
+      const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      heroTl
+        .fromTo('[data-hero-title]',
+          { autoAlpha: 0, y: 34, clipPath: 'inset(0% 0% 100% 0%)' },
+          { autoAlpha: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9 },
+          0
+        )
+        .from('[data-hero-sub]', {
+          autoAlpha: 0,
+          y: 24,
+          filter: 'blur(8px)',
+          duration: 0.7,
+        }, '-=0.55')
+        .from('[data-hero-cta]', {
+          autoAlpha: 0,
+          y: 20,
+          duration: 0.6,
+        }, '-=0.45');
 
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((element) => {
         gsap.from(element, {
@@ -300,33 +311,84 @@ export default function App() {
         );
       });
 
-      // Set up Timeline for the Method Section scroll animation
+      // Deck shuffle: service cards start stacked and spread into the grid on scroll
+      if (servicesGridRef.current) {
+        const cards = gsap.utils.toArray<HTMLElement>(':scope > *', servicesGridRef.current);
+        const firstCard = cards[0];
+
+        if (firstCard && cards.length > 1) {
+          const deck = gsap.timeline({
+            scrollTrigger: {
+              trigger: servicesGridRef.current,
+              start: 'top 85%',
+              end: 'top 35%',
+              scrub: 0.6,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          cards.forEach((card, i) => {
+            gsap.set(card, { zIndex: cards.length - i, transformOrigin: 'center center' });
+            deck.fromTo(card,
+              {
+                x: () => firstCard.offsetLeft - card.offsetLeft,
+                y: () => firstCard.offsetTop - card.offsetTop,
+                rotate: (i - 1) * 5,
+                scale: 0.9,
+                autoAlpha: i === 0 ? 1 : 0.85,
+              },
+              {
+                x: 0,
+                y: 0,
+                rotate: 0,
+                scale: 1,
+                autoAlpha: 1,
+                duration: 1,
+                ease: 'power2.out',
+              },
+              i * 0.18
+            );
+          });
+        }
+      }
+
+      // Method section: line fill + per-step reveal + dot glow, synced to scroll
       if (methodSectionRef.current && timelineLineRef.current) {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: methodSectionRef.current,
             start: 'top 60%',
             end: 'bottom 80%',
-            scrub: 1, // smooth scroll timeline
+            scrub: 1,
           }
         });
 
-        // Animate line height to 100%
-        tl.to(timelineLineRef.current, {
-          height: '100%',
-          ease: 'none',
-          duration: 1
-        }, 0);
+        tl.to(timelineLineRef.current, { height: '100%', ease: 'none', duration: 1 }, 0);
 
-        if (step1Ref.current) {
-          tl.to(step1Ref.current, { backgroundColor: '#BEF500', scale: 1.25, duration: 0.12, yoyo: true, repeat: 1 }, 0);
-        }
-        if (step2Ref.current) {
-          tl.to(step2Ref.current, { backgroundColor: '#BEF500', scale: 1.25, duration: 0.12, yoyo: true, repeat: 1 }, 0.4);
-        }
-        if (step3Ref.current) {
-          tl.to(step3Ref.current, { backgroundColor: '#BEF500', scale: 1.25, duration: 0.12, yoyo: true, repeat: 1 }, 0.8);
-        }
+        const methodSteps = gsap.utils.toArray<HTMLElement>('.method-step', methodSectionRef.current);
+        const stepDots = [step1Ref.current, step2Ref.current, step3Ref.current];
+
+        methodSteps.forEach((step, i) => {
+          const at = i * 0.33;
+
+          tl.fromTo(step,
+            { x: 32, autoAlpha: 0 },
+            { x: 0, autoAlpha: 1, duration: 0.34, ease: 'power2.out' },
+            at
+          );
+
+          const dot = stepDots[i];
+          if (dot) {
+            tl.to(dot, {
+              borderColor: '#BEF500',
+              boxShadow: '0 0 0 6px rgba(190, 245, 0, 0.18)',
+              scale: 1.18,
+              duration: 0.16,
+              yoyo: true,
+              repeat: 1,
+            }, at + 0.2);
+          }
+        });
       }
     }, rootRef);
 
@@ -424,14 +486,14 @@ export default function App() {
 
       <main>
         {/* Hero Section */}
-        <section className="max-w-[1200px] mx-auto px-6 pt-20 md:pt-32 pb-16 md:pb-24 flex flex-col items-center text-center">
-          <h1 data-hero className="font-display font-[800] text-[48px] md:text-[64px] leading-[1.1] tracking-[-2.56px] w-full max-w-[982px] mb-6 bg-gradient-to-r from-white via-brand-lime to-white bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient">
-            Crio sites, sistemas e automações que vendem, organizam e escalam.
+        <section className="max-w-[1200px] mx-auto px-6 pt-12 md:pt-16 pb-16 md:pb-24 flex flex-col items-center text-center">
+          <h1 data-hero-title className="font-display font-[800] text-[48px] md:text-[64px] leading-[1.1] tracking-[-2.56px] w-full max-w-[982px] mb-6 text-white">
+            Transformo operação no improviso em sistema que escala.
           </h1>
-            <p data-hero className="text-[18px] leading-[32px] text-white/50 max-w-[906px] mb-10">
-            Sua empresa ainda depende de planilha, caderno ou WhatsApp para operar? Eu crio a solução digital que organiza, automatiza e faz seu negócio escalar. Entrego funcionando em dias, não meses.
+            <p data-hero-sub className="text-[18px] leading-[32px] text-white/50 max-w-[906px] mb-10">
+            Planilha, caderno e WhatsApp não seguram crescimento. Eu construo o site, sistema ou automação que organiza seu processo, funcionando em dias, não meses.
             </p>
-          <div data-hero className="flex flex-col sm:flex-row items-center gap-4">
+          <div data-hero-cta className="flex flex-col sm:flex-row items-center gap-4">
             <a href="https://wa.me/5574999835227?text=Olá,%20gostaria%20de%20falar%20sobre%20um%20projeto" target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-[#151F00] shadow-sm rounded-xl px-8 py-4 flex items-center gap-2 hover:bg-brand-lime/90 transition-colors">
               <WhatsAppIcon className="w-5 h-5 fill-current" />
               <span className="font-mono text-[13px] font-bold uppercase tracking-[1.3px]">Falar no WhatsApp</span>
@@ -471,9 +533,9 @@ export default function App() {
             Não vendo projeto. Vendo resultado.
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full" data-stagger>
+          <div ref={servicesGridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             {/* Service 1 */}
-            <TiltCard className="h-full" data-stagger-item>
+            <TiltCard className="h-full">
               <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col items-start gap-3 h-full">
                 <div className="flex items-center justify-between w-full mb-2">
                   <span className="font-mono text-[16px] text-white/30">01</span>
@@ -494,7 +556,7 @@ export default function App() {
             </TiltCard>
 
             {/* Service 2 */}
-            <TiltCard className="h-full" data-stagger-item>
+            <TiltCard className="h-full">
               <div className="glass-card shadow-[0_0_0_1px_rgba(190,245,0,0.15)] rounded-lg p-8 flex flex-col items-start gap-3 relative overflow-hidden group h-full">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-brand-lime/[0.08] rounded-bl-[12px] -z-0" />
                 <div className="flex items-center justify-between w-full mb-2 relative z-10">
@@ -516,7 +578,7 @@ export default function App() {
             </TiltCard>
 
             {/* Service 3 */}
-            <TiltCard className="h-full" data-stagger-item>
+            <TiltCard className="h-full">
               <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col items-start gap-3 h-full">
                 <div className="flex items-center justify-between w-full mb-2">
                   <span className="font-mono text-[16px] text-white/30">03</span>
@@ -528,7 +590,7 @@ export default function App() {
                   Automação & IA
                 </h3>
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1">
-                  Processos repetitivos viram fluxos automáticos. IA integrada onde faz sentido. Tempo de volta pra você.
+                  Processos repetitivos viram fluxos automáticos e IA integrada onde faz sentido. Já fiz bots, scraping e consultas em Python, mas meu foco é produto. Tempo de volta pra você.
                 </p>
                 <a href="https://wa.me/5574999835227?text=Olá,%20quero%20automatizar%20processos%20no%20meu%20negócio" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4">
                   Quero automatizar processos <ArrowRight className="w-3.5 h-3.5" />
@@ -545,42 +607,42 @@ export default function App() {
               Meu trabalho entra quando o improviso para de funcionar.
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8" data-stagger>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8" data-stagger>
               {/* Pain Point 1 */}
-              <div className="flex flex-col" data-stagger-item>
+              <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
                 <div className="bg-[#FFDAD6] rounded-xl w-10 h-10 flex items-center justify-center mb-6">
                   <TrendingDown className="text-[#93000A] w-4 h-4" />
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
                   Negócio cresce, operação trava
                 </h3>
-                <p className="font-sans text-[16px] leading-[24px] text-white/50 w-full max-w-[360px]">
+                <p className="font-sans text-[16px] leading-[24px] text-white/50">
                   Clientes chegam, tarefas aumentam e a equipe começa a perder tempo com controle manual retrabalho e falta de visibilidade.
                 </p>
               </div>
 
               {/* Pain Point 2 */}
-              <div className="flex flex-col" data-stagger-item>
+              <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
                 <div className="bg-[#FFDAD6] rounded-xl w-10 h-10 flex items-center justify-center mb-6">
                   <Smartphone className="text-[#93000A] w-4 h-5" />
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
                   Tudo depende do WhatsApp
                 </h3>
-                <p className="font-sans text-[16px] leading-[24px] text-white/50 w-full max-w-[372px]">
+                <p className="font-sans text-[16px] leading-[24px] text-white/50">
                   Pedidos, pagamentos, aprovações e informações importantes ficam espalhados em conversas difíceis de controlar.
                 </p>
               </div>
 
               {/* Pain Point 3 */}
-              <div className="flex flex-col" data-stagger-item>
+              <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
                 <div className="bg-[#FFDAD6] rounded-xl w-10 h-10 flex items-center justify-center mb-6">
                   <LightbulbOff className="text-[#93000A] w-[18px] h-[18px]" />
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
                   Ideia boa sem execução
                 </h3>
-                <p className="font-sans text-[16px] leading-[24px] text-white/50 w-full max-w-[356px]">
+                <p className="font-sans text-[16px] leading-[24px] text-white/50">
                   Você sabe o que precisa construir, mas precisa de alguém que entenda o problema, organize o escopo e entregue funcionando.
                 </p>
               </div>
@@ -589,7 +651,7 @@ export default function App() {
         </section>
 
         {/* Portfolio Section */}
-        <section id="projetos" className="bg-brand-surface border-y border-white/[0.06] py-32 px-6">
+        <section id="projetos" className="bg-brand-surface border-y border-white/[0.06] pt-32 pb-20 px-6">
           <div className="max-w-[1200px] mx-auto flex flex-col gap-16">
             <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white">
               Projetos que deixaram marca.
@@ -598,28 +660,26 @@ export default function App() {
             {/* Bento Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8" data-stagger>
               
-              {/* Vet Anesthesia Pro - Large */}
-              <div className="portfolio-card md:col-span-2 glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col" data-stagger-item data-hover-lift>
-                <div className="portfolio-media portfolio-media-large bg-[#0A1628] w-full flex items-center justify-center overflow-hidden">
-                  <img src="/vet.png" alt="Vet Anesthesia Pro" width="1920" height="937" loading="lazy" decoding="async" sizes="(min-width: 768px) 768px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+              {/* Vet Anesthesia Pro */}
+              <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+                <div className="portfolio-media bg-[#0A1628] w-full flex items-center justify-center shrink-0 overflow-hidden">
+                  <img src="/vet.png" alt="Vet Anesthesia Pro" width="1920" height="937" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
-                <div className="p-8 flex flex-col">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                    <span className="font-mono text-[16px] text-white/40 uppercase tracking-[1.6px]">
-                      SAAS · VETERINÁRIA
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React</span>
-                      <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Node.js</span>
-                      <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">PostgreSQL</span>
-                    </div>
-                  </div>
+                <div className="p-6 md:flex md:flex-col md:flex-grow">
+                  <span className="font-mono text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
+                    SAAS · VETERINÁRIA
+                  </span>
                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
                     Vet Anesthesia Pro
                   </h3>
-                  <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4">
+                  <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
                     Sistema de controlo anestésico para clínicas veterinárias. Substituiu fichas de papel.
                   </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React</span>
+                    <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Node.js</span>
+                    <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">PostgreSQL</span>
+                  </div>
                   <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
                     vetanesthesiapro.com <ArrowRight className="w-3.5 h-3.5" />
                   </a>
@@ -627,7 +687,7 @@ export default function App() {
               </div>
 
               {/* Nexo Delivery - Medium */}
-              <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+              <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
                  <div className="portfolio-media bg-[#0F1A0A] w-full flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/nexo.webp" alt="Nexo Delivery" width="1024" height="1024" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
@@ -653,7 +713,7 @@ export default function App() {
               </div>
 
               {/* GlowApp - Small */}
-              <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full relative" data-stagger-item data-hover-lift>
+              <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full relative" data-stagger-item data-hover-lift>
                 <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm border border-white/[0.06] rounded-xl px-3 py-1 flex items-center gap-1.5 z-10 shadow-sm">
                    <div className="w-2.5 h-2.5 rounded-full bg-blue-300 border border-blue-900/10"></div>
                    <span className="font-mono text-[12px] text-white/80">Cliente fora do Brasil</span>
@@ -682,7 +742,7 @@ export default function App() {
               </div>
 
                {/* AcheiCasa - Small */}
-               <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+               <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
                 <div className="portfolio-media bg-[#0A1A14] w-full flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/acheicasa.webp" alt="AcheiCasa" width="1254" height="1254" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
@@ -707,7 +767,7 @@ export default function App() {
               </div>
 
                {/* AlugMotos - Small */}
-               <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+               <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
                 <div className="portfolio-media bg-[#050A1A] w-full flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/alugmotos.webp" alt="AlugMotos" width="3481" height="3481" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
@@ -732,7 +792,7 @@ export default function App() {
                </div>
 
                {/* EntregaBoy - Small */}
-               <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+               <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
                  <div className="portfolio-media bg-[#111111] w-full flex items-center justify-center shrink-0 overflow-hidden">
                    <img src="/icons/entregaboy.png" alt="EntregaBoy" loading="lazy" decoding="async" className="w-32 h-32 object-contain" />
                  </div>
@@ -752,12 +812,10 @@ export default function App() {
                  </div>
                </div>
 
-               {/* AnunciCar - In development */}
-               <div className="portfolio-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
-                  <div className="portfolio-media bg-[#F0F0EE] w-full flex items-center justify-center shrink-0 overflow-hidden text-center">
-                    <span className="font-mono text-[13px] text-[#555555] uppercase tracking-[1.3px]">
-                      EM DESENVOLVIMENTO
-                    </span>
+               {/* AnunciCar */}
+               <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+                  <div className="portfolio-media bg-[#0E3A44] w-full flex items-center justify-center shrink-0 overflow-hidden">
+                    <img src="/icons/anuncicar.png" alt="AnunciCar" loading="lazy" decoding="async" data-parallax-img className="portfolio-image w-full h-full object-cover" />
                   </div>
                   <div className="p-6 md:flex md:flex-col md:flex-grow">
                     <span className="font-mono text-[14px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
@@ -773,6 +831,9 @@ export default function App() {
                       <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">TanStack</span>
                       <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React Native</span>
                     </div>
+                    <a href="https://anuncicar.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                      anuncicar.com <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
                   </div>
                </div>
 
@@ -781,38 +842,34 @@ export default function App() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="bg-brand-surface border-y border-white/[0.06] py-32 px-6">
+        <section className="bg-brand-surface border-y border-white/[0.06] pt-20 pb-32 px-6">
           <div className="max-w-[1200px] mx-auto flex flex-col gap-16">
             <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[768px]">
               Quem já trabalhou comigo.
             </h2>
-            <div className="relative -mx-6 px-6">
-              <button type="button" aria-label="Ver depoimentos anteriores" className="absolute left-1 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-black/10 bg-white p-3 text-black shadow-sm md:block" onClick={() => document.getElementById('testimonials-list')?.scrollBy({ left: -420, behavior: 'smooth' })}>
-                <ArrowUp className="h-4 w-4 -rotate-90" />
-              </button>
-              <div id="testimonials-list" className="testimonials-scroll flex gap-6 overflow-x-auto pb-4 px-6 snap-x" data-stagger>
-              {testimonialsData.map((t, i) => (
-                <TiltCard key={i} data-stagger-item className="min-w-[min(86vw,380px)] md:min-w-[380px] snap-start">
-                  <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col">
-                    <div className="flex items-center justify-between mb-6">
-                      <span className="font-mono text-[14px] text-white/40 uppercase tracking-[1.4px] leading-tight pr-2">
-                        {t.project}
-                      </span>
-                      <span className="font-mono text-[14px] font-medium text-white/40 shrink-0">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                    </div>
-                    <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-6">
-                      "{t.text}"
-                    </p>
-                    <StarRating rating={t.rating} />
+            <div className="marquee">
+              <div className="marquee__track">
+                {[0, 1].map((group) => (
+                  <div key={group} className="marquee__group" aria-hidden={group === 1 ? true : undefined}>
+                    {testimonialsData.map((t, i) => (
+                      <div key={`${group}-${i}`} className="lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col w-[min(86vw,380px)] shrink-0">
+                        <div className="flex items-center justify-between mb-6">
+                          <span className="font-mono text-[14px] text-white/40 uppercase tracking-[1.4px] leading-tight pr-2">
+                            {t.project}
+                          </span>
+                          <span className="font-mono text-[14px] font-medium text-white/40 shrink-0">
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                        </div>
+                        <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-6">
+                          "{t.text}"
+                        </p>
+                        <StarRating rating={t.rating} />
+                      </div>
+                    ))}
                   </div>
-                </TiltCard>
-              ))}
+                ))}
               </div>
-              <button type="button" aria-label="Ver próximos depoimentos" className="absolute right-1 top-1/2 z-10 hidden -translate-y-1/2 rounded-full border border-black/10 bg-white p-3 text-black shadow-sm md:block" onClick={() => document.getElementById('testimonials-list')?.scrollBy({ left: 420, behavior: 'smooth' })}>
-                <ArrowUp className="h-4 w-4 rotate-90" />
-              </button>
             </div>
           </div>
         </section>
@@ -839,13 +896,13 @@ export default function App() {
             Simples.<br/>Direto.<br/>Entregue.
           </h2>
           
-          <div className="relative pl-12 space-y-16 ml-2 lg:ml-0" data-stagger>
+          <div className="relative pl-12 space-y-16 ml-2 lg:ml-0">
             <div className="absolute left-0 top-2 bottom-4 w-[2px] bg-white/[0.06]">
               <div ref={timelineLineRef} className="w-full bg-brand-lime" style={{ height: "0%" }} />
             </div>
 
             {/* Step 1 */}
-            <div className="relative flex flex-col" data-stagger-item>
+            <div className="relative flex flex-col method-step">
               <div ref={step1Ref} className="absolute -left-[58px] top-1 w-6 h-6 rounded-full border-4 border-white/20 bg-black transition-colors duration-300" />
               <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-white/40 mb-2">Passo 01</span>
               <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-2">
@@ -857,7 +914,7 @@ export default function App() {
             </div>
 
              {/* Step 2 */}
-             <div className="relative flex flex-col" data-stagger-item>
+             <div className="relative flex flex-col method-step">
               <div ref={step2Ref} className="absolute -left-[58px] top-1 w-6 h-6 rounded-full border-4 border-white/20 bg-black transition-colors duration-300" />
               <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-white/40 mb-2">Passo 02</span>
               <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-2">
@@ -869,7 +926,7 @@ export default function App() {
             </div>
 
              {/* Step 3 */}
-             <div className="relative flex flex-col" data-stagger-item>
+             <div className="relative flex flex-col method-step">
               <div ref={step3Ref} className="absolute -left-[58px] top-1 w-6 h-6 rounded-full border-4 border-white/20 bg-black transition-colors duration-300" />
               <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-brand-lime mb-2">Passo 03</span>
               <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-2">
