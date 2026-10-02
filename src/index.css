@@ -140,6 +140,22 @@ button:active,
   }
 }
 
+/* Hero 3D illustration: slow idle float */
+.hero-float {
+  animation: hero-float 6s ease-in-out infinite;
+}
+
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-float {
+    animation: none;
+  }
+}
+
 /* Testimonials infinite marquee */
 .marquee {
   overflow: hidden;
@@ -148,10 +164,18 @@ button:active,
 .marquee__track {
   display: flex;
   width: max-content;
-  animation: marquee 45s linear infinite;
+  cursor: grab;
+  animation: marquee 20s linear infinite;
 }
 
-.marquee:hover .marquee__track {
+/* Held-drag: the pointer handler in App.tsx scrubs animation-delay */
+.marquee__track[data-dragging] {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.marquee:hover .marquee__track,
+.marquee--paused .marquee__track {
   animation-play-state: paused;
 }
 
@@ -168,7 +192,9 @@ button:active,
 
 @media (prefers-reduced-motion: reduce) {
   .marquee__track {
-    animation: none;
+    /* Auto-scroll off, but the animation stays frozen in place so a deliberate
+       held-drag can still scrub it. */
+    animation-play-state: paused;
   }
 }
 

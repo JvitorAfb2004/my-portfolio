@@ -1,5 +1,5 @@
-import { MonitorSmartphone, Database, Bot, TrendingDown, Smartphone, LightbulbOff, ArrowRight, ArrowUp, MessageCircle, Star } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import { ArrowRight, ArrowUp, Star } from 'lucide-react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -75,8 +75,82 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
+function TestimonialCard({
+  text,
+  project,
+  rating,
+  index,
+  group,
+  expanded,
+  onToggle,
+}: {
+  text: string;
+  project: string;
+  rating: number;
+  index: number;
+  group: number;
+  expanded: boolean;
+  onToggle: () => void;
+  key?: React.Key;
+}) {
+  const textRef = useRef<HTMLParagraphElement>(null);
+  const [clamped, setClamped] = useState(false);
+  const textId = `testimonial-${group}-${index}`;
+
+  useLayoutEffect(() => {
+    const element = textRef.current;
+    if (!element) return;
+
+    // With the clamp removed the text always fits, so only measure while collapsed.
+    const measure = () => {
+      if (expanded) return;
+      setClamped(element.scrollHeight > element.clientHeight + 1);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [expanded]);
+
+  return (
+    <div className="lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col w-[min(86vw,380px)] shrink-0">
+      <div className="flex items-start justify-between mb-6">
+        <span className="font-mono text-[14px] text-white/40 uppercase tracking-[1.4px] leading-tight pr-2 line-clamp-2">
+          {project}
+        </span>
+        <span className="font-mono text-[14px] font-medium text-white/40 shrink-0">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+      </div>
+      <p
+        ref={textRef}
+        id={textId}
+        className={`font-sans text-[16px] leading-[26px] text-white/50 ${expanded ? '' : 'line-clamp-4'}`}
+      >
+        "{text}"
+      </p>
+      {(expanded || clamped) && (
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={expanded}
+          aria-controls={textId}
+          className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-brand-lime hover:text-brand-lime/70 transition-colors mt-1.5 py-1.5 self-start"
+        >
+          {expanded ? 'Ler menos' : 'Ler mais'}
+        </button>
+      )}
+      <div className="mt-auto pt-6">
+        <StarRating rating={rating} />
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [activeSection, setActiveSection] = useState('servicos');
+  const [expandedTestimonial, setExpandedTestimonial] = useState<number | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const cursorHorizontalRef = useRef<SVGSVGElement>(null);
@@ -93,6 +167,82 @@ export default function App() {
   const step2Ref = useRef<HTMLDivElement>(null);
   const step3Ref = useRef<HTMLDivElement>(null);
   const servicesGridRef = useRef<HTMLDivElement>(null);
+  const marqueeTrackRef = useRef<HTMLDivElement>(null);
+
+  // Held-drag on the testimonial marquee. Dragging scrubs the loop's phase with
+  // animation-delay instead of adding a transform, so the track always stays wide
+  // enough to cover the container no matter how far it is dragged.
+  useEffect(() => {
+    const track = marqueeTrackRef.current;
+    if (!track) return;
+
+    let offset = 0; // drag position, expressed in seconds of loop time
+    let speed = 0; // px per second, one loop travels half the track
+    let duration = 20; // must match the CSS animation-duration
+    let dragging = false;
+    let moved = false;
+    let startX = 0;
+    let startOffset = 0;
+
+    const apply = () => {
+      // A delay only matters modulo the duration, and it must stay negative so the
+      // loop is already under way instead of waiting out a delay phase.
+      const folded = ((offset % duration) + duration) % duration;
+      track.style.animationDelay = `${-folded}s`;
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      duration = parseFloat(getComputedStyle(track).animationDuration);
+      if (!duration) return;
+      dragging = true;
+      moved = false;
+      startX = event.clientX;
+      startOffset = offset;
+      speed = track.offsetWidth / 2 / duration;
+      track.dataset.dragging = '';
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!dragging) return;
+      const dx = event.clientX - startX;
+      // A few pixels of slack, so a plain click on "Ler mais" is not a drag.
+      if (!moved) {
+        if (Math.abs(dx) < 4) return;
+        moved = true;
+      }
+      event.preventDefault();
+      offset = startOffset - dx / speed;
+      apply();
+    };
+
+    const onPointerUp = () => {
+      if (!dragging) return;
+      dragging = false;
+      delete track.dataset.dragging;
+    };
+
+    // A drag that ends over a card must not also fire that card's button.
+    const onClickCapture = (event: MouseEvent) => {
+      if (!moved) return;
+      moved = false;
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
+    track.addEventListener('pointerdown', onPointerDown);
+    track.addEventListener('click', onClickCapture, true);
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+    return () => {
+      track.removeEventListener('pointerdown', onPointerDown);
+      track.removeEventListener('click', onClickCapture, true);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, []);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -222,6 +372,12 @@ export default function App() {
 
       const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       heroTl
+        .from('[data-hero-visual]', {
+          autoAlpha: 0,
+          y: 28,
+          scale: 0.92,
+          duration: 0.7,
+        }, 0)
         .fromTo('[data-hero-title]',
           { autoAlpha: 0, y: 34, clipPath: 'inset(0% 0% 100% 0%)' },
           { autoAlpha: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9 },
@@ -238,6 +394,20 @@ export default function App() {
           y: 20,
           duration: 0.6,
         }, '-=0.45');
+
+      // Hero illustration: grows and lags behind the scroll, then fades — depth cue.
+      // The rocket sits 64px under the fixed header, so ~90px of scroll is the whole time
+      // it is on screen. Absolute scroll positions, because the hero section starts below the fold.
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '[data-hero-section]',
+          start: 0,
+          end: 90,
+          scrub: 0.6,
+        },
+      })
+        .to('[data-hero-scroll]', { scale: 1.35, y: 12, ease: 'none', duration: 1 }, 0)
+        .to('[data-hero-scroll]', { autoAlpha: 0, ease: 'none', duration: 0.5 }, 0.5);
 
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((element) => {
         gsap.from(element, {
@@ -486,7 +656,12 @@ export default function App() {
 
       <main>
         {/* Hero Section */}
-        <section className="max-w-[1200px] mx-auto px-6 pt-12 md:pt-16 pb-16 md:pb-24 flex flex-col items-center text-center">
+        <section data-hero-section className="max-w-[1200px] mx-auto px-6 pt-12 md:pt-16 pb-16 md:pb-24 flex flex-col items-center text-center">
+          <div data-hero-scroll className="mb-4">
+            <div data-hero-visual>
+              <img src="/icons/3d/rocket.png" alt="" aria-hidden="true" width="144" height="144" fetchPriority="high" decoding="async" className="hero-float w-32 h-32 md:w-36 md:h-36 object-contain" />
+            </div>
+          </div>
           <h1 data-hero-title className="font-display font-[800] text-[48px] md:text-[64px] leading-[1.1] tracking-[-2.56px] w-full max-w-[982px] mb-6 text-white">
             Transformo operação no improviso em sistema que escala.
           </h1>
@@ -507,7 +682,7 @@ export default function App() {
 
         {/* Stats Section */}
         <section className="bg-brand-surface border-y border-white/[0.06] py-12 px-6">
-          <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-4 md:gap-0 divide-x-0 md:divide-x divide-white/[0.06]" data-stagger>
+          <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-4 md:gap-0 divide-x-0 md:divide-x divide-white/[0.06]" data-stagger>
             <div className="flex flex-col items-center" data-stagger-item>
               <span className="font-display text-[16px] leading-[24px] text-white tabular-nums" data-counter="20" data-suffix="+">20+</span>
               <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2">Projetos entregues com sucesso</span>
@@ -516,13 +691,9 @@ export default function App() {
               <span className="font-display text-[16px] leading-[24px] text-white tabular-nums" data-counter="400" data-prefix="R$" data-suffix=" mil +">R$400 mil +</span>
               <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2 text-center">Movimentados em sistemas</span>
             </div>
-            <div className="flex flex-col items-center" data-stagger-item>
-              <span className="font-display text-[16px] leading-[24px] text-white tabular-nums" data-counter="2" data-suffix="+">2+</span>
+            <div className="flex flex-col items-center col-span-2 md:col-span-1" data-stagger-item>
+              <span className="font-display text-[16px] leading-[24px] text-white tabular-nums" data-counter="3" data-suffix="+">3+</span>
               <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2">Anos transformando processos</span>
-            </div>
-            <div className="flex flex-col items-center" data-stagger-item>
-              <span className="font-display text-[16px] leading-[24px] text-white tabular-nums" data-counter="12" data-suffix="h">12h</span>
-              <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2">Resposta em até 12h</span>
             </div>
           </div>
         </section>
@@ -537,11 +708,9 @@ export default function App() {
             {/* Service 1 */}
             <TiltCard className="h-full">
               <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col items-start gap-3 h-full">
-                <div className="flex items-center justify-between w-full mb-2">
+                <div className="flex items-start justify-between w-full mb-2">
+                  <img src="/icons/3d/computer.png" alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async" className="w-24 h-24 object-contain" />
                   <span className="font-mono text-[16px] text-white/30">01</span>
-                  <div className="bg-white/[0.06] rounded-xl w-12 h-12 flex items-center justify-center">
-                    <MonitorSmartphone className="w-5 h-5 text-white" strokeWidth={1.5} />
-                  </div>
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mt-2">
                   Sites que vendem
@@ -558,12 +727,10 @@ export default function App() {
             {/* Service 2 */}
             <TiltCard className="h-full">
               <div className="glass-card shadow-[0_0_0_1px_rgba(190,245,0,0.15)] rounded-lg p-8 flex flex-col items-start gap-3 relative overflow-hidden group h-full">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-lime/[0.08] rounded-bl-[12px] -z-0" />
-                <div className="flex items-center justify-between w-full mb-2 relative z-10">
+                <div className="absolute -top-16 -right-16 w-40 h-40 bg-brand-lime/[0.10] rounded-full blur-2xl -z-0" />
+                <div className="flex items-start justify-between w-full mb-2 relative z-10">
+                  <img src="/icons/3d/chart.png" alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async" className="w-24 h-24 object-contain" />
                   <span className="font-mono text-[16px] text-white/30">02</span>
-                  <div className="bg-brand-lime rounded-xl w-12 h-12 flex items-center justify-center">
-                    <Database className="w-5 h-5 text-[#151F00]" strokeWidth={2} />
-                  </div>
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mt-2 relative z-10">
                   Sistemas internos
@@ -580,11 +747,9 @@ export default function App() {
             {/* Service 3 */}
             <TiltCard className="h-full">
               <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col items-start gap-3 h-full">
-                <div className="flex items-center justify-between w-full mb-2">
+                <div className="flex items-start justify-between w-full mb-2">
+                  <img src="/icons/3d/setting.png" alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async" className="w-24 h-24 object-contain" />
                   <span className="font-mono text-[16px] text-white/30">03</span>
-                  <div className="bg-white/[0.06] rounded-xl w-12 h-12 flex items-center justify-center">
-                    <Bot className="w-[22px] h-[19px] text-white" strokeWidth={1.5} />
-                  </div>
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mt-2">
                   Automação & IA
@@ -610,9 +775,7 @@ export default function App() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8" data-stagger>
               {/* Pain Point 1 */}
               <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
-                <div className="bg-[#FFDAD6] rounded-xl w-10 h-10 flex items-center justify-center mb-6">
-                  <TrendingDown className="text-[#93000A] w-4 h-4" />
-                </div>
+                <img src="/icons/3d/calculator.png" alt="" aria-hidden="true" width="80" height="80" loading="lazy" decoding="async" className="w-20 h-20 object-contain mb-4" />
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
                   Negócio cresce, operação trava
                 </h3>
@@ -623,9 +786,7 @@ export default function App() {
 
               {/* Pain Point 2 */}
               <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
-                <div className="bg-[#FFDAD6] rounded-xl w-10 h-10 flex items-center justify-center mb-6">
-                  <Smartphone className="text-[#93000A] w-4 h-5" />
-                </div>
+                <img src="/icons/3d/chat-bubble.png" alt="" aria-hidden="true" width="80" height="80" loading="lazy" decoding="async" className="w-20 h-20 object-contain mb-4" />
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
                   Tudo depende do WhatsApp
                 </h3>
@@ -636,9 +797,7 @@ export default function App() {
 
               {/* Pain Point 3 */}
               <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
-                <div className="bg-[#FFDAD6] rounded-xl w-10 h-10 flex items-center justify-center mb-6">
-                  <LightbulbOff className="text-[#93000A] w-[18px] h-[18px]" />
-                </div>
+                <img src="/icons/3d/bulb.png" alt="" aria-hidden="true" width="80" height="80" loading="lazy" decoding="async" className="w-20 h-20 object-contain mb-4" />
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
                   Ideia boa sem execução
                 </h3>
@@ -847,25 +1006,26 @@ export default function App() {
             <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[768px]">
               Quem já trabalhou comigo.
             </h2>
-            <div className="marquee">
-              <div className="marquee__track">
+            <div className={`marquee ${expandedTestimonial === null ? '' : 'marquee--paused'}`}>
+              <div className="marquee__track" ref={marqueeTrackRef}>
                 {[0, 1].map((group) => (
-                  <div key={group} className="marquee__group" aria-hidden={group === 1 ? true : undefined}>
+                  <div
+                    key={group}
+                    className="marquee__group"
+                    aria-hidden={group === 1 ? true : undefined}
+                    inert={group === 1}
+                  >
                     {testimonialsData.map((t, i) => (
-                      <div key={`${group}-${i}`} className="lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-8 flex flex-col w-[min(86vw,380px)] shrink-0">
-                        <div className="flex items-center justify-between mb-6">
-                          <span className="font-mono text-[14px] text-white/40 uppercase tracking-[1.4px] leading-tight pr-2">
-                            {t.project}
-                          </span>
-                          <span className="font-mono text-[14px] font-medium text-white/40 shrink-0">
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
-                        </div>
-                        <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-6">
-                          "{t.text}"
-                        </p>
-                        <StarRating rating={t.rating} />
-                      </div>
+                      <TestimonialCard
+                        key={`${group}-${i}`}
+                        text={t.text}
+                        project={t.project}
+                        rating={t.rating}
+                        index={i}
+                        group={group}
+                        expanded={expandedTestimonial === i}
+                        onToggle={() => setExpandedTestimonial((current) => (current === i ? null : i))}
+                      />
                     ))}
                   </div>
                 ))}
@@ -952,21 +1112,14 @@ export default function App() {
               
               <div className="flex flex-col gap-6">
                 <a href="mailto:jvitorafb@gmail.com" className="flex items-center gap-4 group">
-                  <div className="bg-white/[0.06] w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
-                    <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white group-hover:scale-110 transition-transform">
-                      <path d="M2.00016 4C2.00016 2.89543 2.89559 2 4.00016 2H16.0002C17.1047 2 18.0002 2.89543 18.0002 4V12C18.0002 13.1046 17.1047 14 16.0002 14H4.00016C2.89559 14 2.00016 13.1046 2.00016 12V4Z" fill="currentColor"/>
-                      <path d="M18.0002 4.54541L10.0002 9.4545L2.00016 4.54541" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
+                  <img src="/icons/3d/mail.png" alt="" aria-hidden="true" width="56" height="56" loading="lazy" decoding="async" className="w-14 h-14 object-contain group-hover:scale-110 transition-transform" />
                   <span className="font-sans font-medium text-[16px] text-white/70 group-hover:underline">
                     jvitorafb@gmail.com
                   </span>
                 </a>
                 
                 <a href="https://wa.me/5574999835227?text=Olá,%20gostaria%20de%20falar%20sobre%20um%20projeto" target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
-                  <div className="bg-white/[0.06] w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
-                    <WhatsAppIcon className="w-5 h-5 text-white fill-current group-hover:scale-110 transition-transform" />
-                  </div>
+                  <WhatsAppIcon className="w-11 h-11 text-white fill-current group-hover:scale-110 transition-transform" />
                   <span className="font-sans font-medium text-[16px] text-white/70 group-hover:underline">
                     Falar no WhatsApp
                   </span>
@@ -976,11 +1129,7 @@ export default function App() {
 
             {/* Contact Card */}
             <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-12 flex flex-col items-center flex-1 max-w-[632px]" data-reveal data-hover-lift>
-              <div className="bg-brand-lime/20 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
-                 <svg width="22" height="27" viewBox="0 0 22 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13.3333 1.33331L1.33333 14.6666H12L10.6667 25.3333L22.6667 12H12L13.3333 1.33331Z" fill="#BEF500" stroke="#BEF500" strokeLinejoin="round"/>
-                </svg>
-              </div>
+              <img src="/icons/3d/flash.png" alt="" aria-hidden="true" width="112" height="112" loading="lazy" decoding="async" className="w-28 h-28 object-contain mb-4" />
               <h3 className="font-display font-[400] text-[16px] leading-[24px] text-white text-center mb-4">
                 Pronto para começar?
               </h3>
