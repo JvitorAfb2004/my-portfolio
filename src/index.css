@@ -140,22 +140,6 @@ button:active,
   }
 }
 
-/* Hero 3D illustration: slow idle float */
-.hero-float {
-  animation: hero-float 6s ease-in-out infinite;
-}
-
-@keyframes hero-float {
-  0%, 100% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-12px) rotate(2deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-float {
-    animation: none;
-  }
-}
-
 /* Testimonials infinite marquee */
 .marquee {
   overflow: hidden;
@@ -195,6 +179,24 @@ button:active,
     /* Auto-scroll off, but the animation stays frozen in place so a deliberate
        held-drag can still scrub it. */
     animation-play-state: paused;
+  }
+}
+
+@media (max-width: 767px) {
+  .marquee {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .marquee::-webkit-scrollbar {
+    display: none;
+  }
+
+  .marquee__track {
+    animation: none;
   }
 }
 

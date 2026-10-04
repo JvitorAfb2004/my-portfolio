@@ -1,11 +1,75 @@
-import { ArrowRight, ArrowUp, Star } from 'lucide-react';
+import { ArrowRight, ArrowUp, BrainCircuit, ChevronDown, Code2, Languages, Linkedin, Star } from 'lucide-react';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import 'lenis/dist/lenis.css';
+import { getSavedLanguage, i18n, translate, type Language } from './i18n';
 
 gsap.registerPlugin(ScrollTrigger);
+
+const languageOptions: Array<{ code: Language; label: string }> = [
+  { code: 'pt-BR', label: 'Português (Brasil)' },
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Español' },
+  { code: 'pt-PT', label: 'Português (Portugal)' },
+];
+
+function LanguageFlag({ language }: { language: Language }) {
+  const commonProps = { viewBox: '0 0 36 24', className: 'h-4 w-6 shrink-0 rounded-[2px]', 'aria-hidden': true as const };
+
+  if (language === 'pt-BR') return (
+    <svg {...commonProps}>
+      <rect width="36" height="24" fill="#009739" />
+      <path d="M18 3 32 12 18 21 4 12Z" fill="#FFDF00" />
+      <circle cx="18" cy="12" r="5.2" fill="#002776" />
+      <path d="M13 10.8c3.3-.8 6.6-.2 9.6 1.5" fill="none" stroke="#fff" strokeWidth=".8" />
+    </svg>
+  );
+
+  if (language === 'en') return (
+    <svg {...commonProps}>
+      <rect width="36" height="24" fill="#012169" />
+      <path d="m0 0 36 24M36 0 0 24" stroke="#fff" strokeWidth="5" />
+      <path d="m0 0 36 24M36 0 0 24" stroke="#C8102E" strokeWidth="2" />
+      <path d="M18 0v24M0 12h36" stroke="#fff" strokeWidth="8" />
+      <path d="M18 0v24M0 12h36" stroke="#C8102E" strokeWidth="4" />
+    </svg>
+  );
+
+  if (language === 'es') return (
+    <svg {...commonProps}>
+      <rect width="36" height="24" fill="#AA151B" />
+      <path d="M0 6h36v12H0z" fill="#F1BF00" />
+    </svg>
+  );
+
+  return (
+    <svg {...commonProps}>
+      <rect width="14" height="24" fill="#046A38" />
+      <rect x="14" width="22" height="24" fill="#DA291C" />
+      <circle cx="14" cy="12" r="4.2" fill="#FFCD00" />
+      <circle cx="14" cy="12" r="2.6" fill="#fff" />
+      <path d="M11.8 10.5h4.4v2.1a2.2 2.2 0 0 1-4.4 0z" fill="#DA291C" />
+    </svg>
+  );
+}
+
+const revealVariants = {
+  hidden: { opacity: 0, y: 36, filter: 'blur(8px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] as const } },
+};
+
+const staggerVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
+
+const staggerItemVariants = {
+  hidden: { opacity: 0, y: 36, filter: 'blur(8px)' },
+  show: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] as const } },
+};
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -30,31 +94,11 @@ function TiltCard({ children, className, ...props }: TiltCardProps) {
 }
 
 const testimonialsData = [
-  {
-    project: "App de anestesiologia veterinária",
-    text: "Excelente programador! Entregou antes do prazo final, muito comprometido e tem ótima comunicação. Continuarei trabalhando com ele no meu app futuramente, e certamente recomendaria para colegas!",
-    rating: 5.0,
-  },
-  {
-    project: "Sistema de gestão de inscrições",
-    text: "Profissional muito prestativo e competente.",
-    rating: 4.8,
-  },
-  {
-    project: "Site e app para cadastro e pesquisa",
-    text: "Super prestativo",
-    rating: 5.0,
-  },
-  {
-    project: "App mobile com WebSocket",
-    text: "Recomendo. Prestativo e tudo de acordo com o combinado",
-    rating: 5.0,
-  },
-  {
-    project: "Portal de anúncios imobiliários",
-    text: "Excelente profissional!!! conhecimento e domínio incrível. Já trabalhei com diversos profissionais, mas o programador João se destaca. Pontual, dedicado, compreende o projeto, paciente e executa com agilidade e profissionalismo. Sem sombra de dúvida ganhou um cliente, espero seguir sempre com a parceria, não trocaria este profissional por nenhum da plataforma 99freelas.",
-    rating: 5.0,
-  },
+  { rating: 5.0 },
+  { rating: 4.8 },
+  { rating: 5.0 },
+  { rating: 5.0 },
+  { rating: 5.0 },
 ];
 
 function StarRating({ rating }: { rating: number }) {
@@ -83,6 +127,7 @@ function TestimonialCard({
   group,
   expanded,
   onToggle,
+  language,
 }: {
   text: string;
   project: string;
@@ -91,6 +136,7 @@ function TestimonialCard({
   group: number;
   expanded: boolean;
   onToggle: () => void;
+  language: Language;
   key?: React.Key;
 }) {
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -128,7 +174,7 @@ function TestimonialCard({
         id={textId}
         className={`font-sans text-[16px] leading-[26px] text-white/50 ${expanded ? '' : 'line-clamp-4'}`}
       >
-        "{text}"
+        “{text}”
       </p>
       {(expanded || clamped) && (
         <button
@@ -138,7 +184,7 @@ function TestimonialCard({
           aria-controls={textId}
           className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-brand-lime hover:text-brand-lime/70 transition-colors mt-1.5 py-1.5 self-start"
         >
-          {expanded ? 'Ler menos' : 'Ler mais'}
+          {translate(language, expanded ? 'testimonials.readLess' : 'testimonials.readMore')}
         </button>
       )}
       <div className="mt-auto pt-6">
@@ -152,7 +198,15 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('servicos');
   const [expandedTestimonial, setExpandedTestimonial] = useState<number | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [compactHeader, setCompactHeader] = useState(false);
+  const [language, setLanguage] = useState<Language>(getSavedLanguage);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const shouldReduceMotion = useReducedMotion() ?? false;
+  const { scrollY } = useScroll();
+  const headerWidth = useTransform(scrollY, [0, 140], ['min(1200px, calc(100% - 2rem))', 'min(880px, calc(100% - 1.5rem))'], { clamp: true });
   const rootRef = useRef<HTMLDivElement>(null);
+  const languageMenuRef = useRef<HTMLDivElement>(null);
+  const languageTriggerRef = useRef<HTMLButtonElement>(null);
   const cursorHorizontalRef = useRef<SVGSVGElement>(null);
   const cursorVerticalRef = useRef<SVGSVGElement>(null);
   const turbulenceXRef = useRef<SVGFETurbulenceElement>(null);
@@ -372,12 +426,6 @@ export default function App() {
 
       const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
       heroTl
-        .from('[data-hero-visual]', {
-          autoAlpha: 0,
-          y: 28,
-          scale: 0.92,
-          duration: 0.7,
-        }, 0)
         .fromTo('[data-hero-title]',
           { autoAlpha: 0, y: 34, clipPath: 'inset(0% 0% 100% 0%)' },
           { autoAlpha: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9 },
@@ -394,52 +442,6 @@ export default function App() {
           y: 20,
           duration: 0.6,
         }, '-=0.45');
-
-      // Hero illustration: grows and lags behind the scroll, then fades — depth cue.
-      // The rocket sits 64px under the fixed header, so ~90px of scroll is the whole time
-      // it is on screen. Absolute scroll positions, because the hero section starts below the fold.
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '[data-hero-section]',
-          start: 0,
-          end: 90,
-          scrub: 0.6,
-        },
-      })
-        .to('[data-hero-scroll]', { scale: 1.35, y: 12, ease: 'none', duration: 1 }, 0)
-        .to('[data-hero-scroll]', { autoAlpha: 0, ease: 'none', duration: 0.5 }, 0.5);
-
-      gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((element) => {
-        gsap.from(element, {
-          autoAlpha: 0,
-          y: 42,
-          filter: 'blur(8px)',
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: element,
-            start: 'top 82%',
-            once: true,
-          },
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>('[data-stagger]').forEach((group) => {
-        const items = gsap.utils.toArray<HTMLElement>('[data-stagger-item]', group);
-        gsap.from(items, {
-          autoAlpha: 0,
-          y: 36,
-          filter: 'blur(8px)',
-          duration: 0.75,
-          ease: 'power3.out',
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: group,
-            start: 'top 78%',
-            once: true,
-          },
-        });
-      });
 
       gsap.utils.toArray<HTMLElement>('[data-counter]').forEach((element) => {
         const target = Number(element.dataset.counter);
@@ -460,7 +462,7 @@ export default function App() {
             once: true,
           },
           onUpdate: () => {
-            element.textContent = `${prefix}${Math.round(value.current).toLocaleString('pt-BR')}${suffix}`;
+            element.textContent = `${prefix}${Math.round(value.current).toLocaleString(document.documentElement.lang)}${suffix}`;
           },
         });
       });
@@ -522,7 +524,7 @@ export default function App() {
         }
       }
 
-      // Method section: line fill + per-step reveal + dot glow, synced to scroll
+        // Method section: line fill + dot glow remain scroll-scrubbed by GSAP.
       if (methodSectionRef.current && timelineLineRef.current) {
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -540,12 +542,6 @@ export default function App() {
 
         methodSteps.forEach((step, i) => {
           const at = i * 0.33;
-
-          tl.fromTo(step,
-            { x: 32, autoAlpha: 0 },
-            { x: 0, autoAlpha: 1, duration: 0.34, ease: 'power2.out' },
-            at
-          );
 
           const dot = stepDots[i];
           if (dot) {
@@ -581,14 +577,61 @@ export default function App() {
         ease: 'power2.out'
       });
     }
-  }, [activeSection]);
+  }, [activeSection, language]);
 
   useEffect(() => {
-    const handleScroll = () => setShowScrollTop(window.scrollY > 600);
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 600);
+      setCompactHeader(window.scrollY > 24);
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    void i18n.changeLanguage(language);
+    localStorage.setItem('language', language);
+    document.documentElement.lang = language;
+    document.title = translate(language, 'meta.title');
+    document.querySelector('meta[name="description"]')?.setAttribute('content', translate(language, 'meta.description'));
+  }, [language]);
+
+  useEffect(() => {
+    if (!showLanguageMenu) return;
+
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!languageMenuRef.current?.contains(event.target as Node)) setShowLanguageMenu(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setShowLanguageMenu(false);
+      languageTriggerRef.current?.focus();
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsideClick);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [showLanguageMenu]);
+
+  const t = (key: string, values?: Record<string, string>) => translate(language, key, values);
+  const whatsappUrl = `https://wa.me/5574999835227?text=${encodeURIComponent(language === 'en' ? 'Hello, I would like to talk about a project' : language === 'es' ? 'Hola, me gustaría hablar sobre un proyecto' : language === 'pt-PT' ? 'Olá, gostaria de falar sobre um projeto' : 'Olá, gostaria de falar sobre um projeto')}`;
+  const revealProps = shouldReduceMotion ? {} : {
+    variants: revealVariants,
+    initial: 'hidden' as const,
+    whileInView: 'show' as const,
+    viewport: { once: true, margin: '0px 0px -12% 0px' },
+  };
+  const staggerProps = shouldReduceMotion ? {} : {
+    variants: staggerVariants,
+    initial: 'hidden' as const,
+    whileInView: 'show' as const,
+    viewport: { once: true, margin: '0px 0px -18% 0px' },
+  };
+  const staggerItemProps = shouldReduceMotion ? {} : { variants: staggerItemVariants };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -629,11 +672,14 @@ export default function App() {
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-black/70 backdrop-blur-md border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <motion.header
+        style={shouldReduceMotion ? undefined : { width: headerWidth }}
+        className={`sticky z-50 mx-auto flex justify-center px-0 transition-[top] duration-300 ${compactHeader ? 'top-4' : 'top-0'}`}
+      >
+        <div className={`flex h-20 w-full items-center justify-between border border-white/[0.06] bg-black/70 px-3 backdrop-blur-md transition-[border-radius,box-shadow] duration-300 sm:px-6 ${compactHeader ? 'rounded-full shadow-lg' : 'rounded-none border-x-0 border-t-0'}`}>
           <div className="flex items-center gap-1 font-display font-bold text-2xl tracking-tight text-white">
             JVITOR
-            <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-normal text-white/50 mt-1 ml-1">
+            <span className="hidden font-mono text-[13px] uppercase tracking-[1.3px] font-normal text-white/50 mt-1 ml-1 sm:inline">
               DEV
             </span>
           </div>
@@ -643,38 +689,90 @@ export default function App() {
               className="absolute bottom-0 h-[2px] bg-brand-lime"
               style={{ left: 0, width: 0 }}
             />
-            <a href="#servicos" data-section="servicos" onClick={(e) => handleNavClick(e, 'servicos')} className={`pb-1 font-mono text-[13px] font-bold tracking-[0.65px] transition-colors ${activeSection === 'servicos' ? 'text-white' : 'text-white/50 hover:text-white'}`}>Serviços</a>
-            <a href="#projetos" data-section="projetos" onClick={(e) => handleNavClick(e, 'projetos')} className={`pb-1 font-mono text-[13px] font-medium tracking-[0.65px] transition-colors ${activeSection === 'projetos' ? 'text-white' : 'text-white/50 hover:text-white'}`}>Projetos</a>
-            <a href="#metodo" data-section="metodo" onClick={(e) => handleNavClick(e, 'metodo')} className={`pb-1 font-mono text-[13px] font-medium tracking-[0.65px] transition-colors ${activeSection === 'metodo' ? 'text-white' : 'text-white/50 hover:text-white'}`}>Método</a>
-            <a href="#contato" data-section="contato" onClick={(e) => handleNavClick(e, 'contato')} className={`pb-1 font-mono text-[13px] font-medium tracking-[0.65px] transition-colors ${activeSection === 'contato' ? 'text-white' : 'text-white/50 hover:text-white'}`}>Contato</a>
+            <a href="#servicos" data-section="servicos" onClick={(e) => handleNavClick(e, 'servicos')} className={`pb-1 font-mono text-[13px] font-bold tracking-[0.65px] transition-colors ${activeSection === 'servicos' ? 'text-white' : 'text-white/50 hover:text-white'}`}>{t('nav.services')}</a>
+            <a href="#projetos" data-section="projetos" onClick={(e) => handleNavClick(e, 'projetos')} className={`pb-1 font-mono text-[13px] font-medium tracking-[0.65px] transition-colors ${activeSection === 'projetos' ? 'text-white' : 'text-white/50 hover:text-white'}`}>{t('nav.projects')}</a>
+            <a href="#metodo" data-section="metodo" onClick={(e) => handleNavClick(e, 'metodo')} className={`pb-1 font-mono text-[13px] font-medium tracking-[0.65px] transition-colors ${activeSection === 'metodo' ? 'text-white' : 'text-white/50 hover:text-white'}`}>{t('nav.method')}</a>
+            <a href="#contato" data-section="contato" onClick={(e) => handleNavClick(e, 'contato')} className={`pb-1 font-mono text-[13px] font-medium tracking-[0.65px] transition-colors ${activeSection === 'contato' ? 'text-white' : 'text-white/50 hover:text-white'}`}>{t('nav.contact')}</a>
           </nav>
-          <a href="#contato" onClick={(e) => handleNavClick(e, 'contato')} className="bg-brand-lime text-black px-6 py-3 rounded-xl font-mono text-[13px] font-medium tracking-[0.65px] hover:bg-brand-lime/90 transition-colors">
-            Falar agora
+          <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
+          <div className="relative" ref={languageMenuRef}>
+            <button
+              ref={languageTriggerRef}
+              type="button"
+              aria-label={`${t('aria.language')}: ${languageOptions.find((option) => option.code === language)?.label}`}
+              aria-expanded={showLanguageMenu}
+              aria-controls="language-menu"
+              onClick={() => setShowLanguageMenu((open) => !open)}
+              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/70 px-2 py-2 text-[11px] text-white transition-colors hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-lime md:gap-2 md:px-3 md:text-sm"
+            >
+              <LanguageFlag language={language} />
+              <span>{language}</span>
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${showLanguageMenu ? 'rotate-180' : ''}`} aria-hidden="true" />
+            </button>
+            <AnimatePresence>
+            {showLanguageMenu && (
+              <motion.div
+                id="language-menu"
+                initial={shouldReduceMotion ? false : { opacity: 0, y: -6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={shouldReduceMotion ? undefined : { opacity: 0, y: -4, scale: 0.98 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.16, ease: 'easeOut' }}
+                style={{ transformOrigin: 'top right' }}
+                className="absolute right-0 top-full z-50 mt-2 min-w-52 overflow-hidden rounded-2xl border border-black/10 bg-white p-1.5 text-black shadow-xl"
+                role="group"
+                aria-label={t('aria.language')}
+              >
+                {languageOptions.map((option) => (
+                  <button
+                    key={option.code}
+                    type="button"
+                    aria-pressed={language === option.code}
+                    onClick={() => {
+                      setLanguage(option.code);
+                      setShowLanguageMenu(false);
+                      languageTriggerRef.current?.focus();
+                    }}
+                    className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${language === option.code ? 'bg-black/[0.06] font-semibold' : 'hover:bg-black/[0.04]'}`}
+                  >
+                    <LanguageFlag language={option.code} />
+                    <span className="flex-1">{option.label}</span>
+                    {language === option.code && <span aria-hidden="true" className="text-brand-gray">✓</span>}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+            </AnimatePresence>
+          </div>
+          <a href="#contato" onClick={(e) => handleNavClick(e, 'contato')} className="bg-brand-lime text-black px-3 py-2 md:px-6 md:py-3 rounded-full font-mono text-[11px] md:text-[13px] font-medium tracking-[0.65px] hover:bg-brand-lime/90 transition-colors">
+            {t('nav.cta')}
           </a>
+          </div>
         </div>
-      </header>
+      </motion.header>
 
       <main>
         {/* Hero Section */}
-        <section data-hero-section className="max-w-[1200px] mx-auto px-6 pt-12 md:pt-16 pb-16 md:pb-24 flex flex-col items-center text-center">
-          <div data-hero-scroll className="mb-4">
-            <div data-hero-visual>
-              <img src="/icons/3d/rocket.png" alt="" aria-hidden="true" width="144" height="144" fetchPriority="high" decoding="async" className="hero-float w-32 h-32 md:w-36 md:h-36 object-contain" />
-            </div>
+        <section className="relative isolate mx-auto flex max-w-[1200px] flex-col items-center px-6 pt-12 pb-16 text-center md:pt-16 md:pb-24">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none overflow-hidden text-black/[0.06]">
+            <Code2 className="absolute left-[8%] top-[12%] h-14 w-14 -rotate-12" strokeWidth={1.25} />
+            <Languages className="absolute right-[9%] top-[22%] h-16 w-16 rotate-6" strokeWidth={1.1} />
+            <BrainCircuit className="absolute left-[13%] bottom-[15%] h-[4.5rem] w-[4.5rem] rotate-6" strokeWidth={1.1} />
+            <Linkedin className="absolute right-[13%] bottom-[19%] h-12 w-12 -rotate-6" strokeWidth={1.2} />
+            <WhatsAppIcon className="absolute right-[32%] top-[9%] h-11 w-11 fill-current" />
           </div>
           <h1 data-hero-title className="font-display font-[800] text-[48px] md:text-[64px] leading-[1.1] tracking-[-2.56px] w-full max-w-[982px] mb-6 text-white">
-            Transformo operação no improviso em sistema que escala.
+            {t('hero.title')}
           </h1>
             <p data-hero-sub className="text-[18px] leading-[32px] text-white/50 max-w-[906px] mb-10">
-            Planilha, caderno e WhatsApp não seguram crescimento. Eu construo o site, sistema ou automação que organiza seu processo, funcionando em dias, não meses.
+            {t('hero.subtitle')}
             </p>
           <div data-hero-cta className="flex flex-col sm:flex-row items-center gap-4">
-            <a href="https://wa.me/5574999835227?text=Olá,%20gostaria%20de%20falar%20sobre%20um%20projeto" target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-[#151F00] shadow-sm rounded-xl px-8 py-4 flex items-center gap-2 hover:bg-brand-lime/90 transition-colors">
+            <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-[#151F00] shadow-sm rounded-xl px-8 py-4 flex items-center gap-2 hover:bg-brand-lime/90 transition-colors">
               <WhatsAppIcon className="w-5 h-5 fill-current" />
-              <span className="font-mono text-[13px] font-bold uppercase tracking-[1.3px]">Falar no WhatsApp</span>
+              <span className="font-mono text-[13px] font-bold uppercase tracking-[1.3px]">{t('common.whatsapp')}</span>
             </a>
             <a href="#projetos" onClick={(e) => handleNavClick(e, 'projetos')} data-hover-lift className="border border-white/20 rounded-xl px-8 py-4 flex items-center gap-2 hover:bg-white/5 transition-colors">
-              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-white">Ver Projetos</span>
+              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-white">{t('hero.projects')}</span>
               <ArrowRight className="w-3.5 h-3.5 text-white" />
             </a>
           </div>
@@ -682,27 +780,27 @@ export default function App() {
 
         {/* Stats Section */}
         <section className="bg-brand-surface border-y border-white/[0.06] py-12 px-6">
-          <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-4 md:gap-0 divide-x-0 md:divide-x divide-white/[0.06]" data-stagger>
-            <div className="flex flex-col items-center" data-stagger-item>
-              <span className="font-display text-[16px] leading-[24px] text-white tabular-nums" data-counter="20" data-suffix="+">20+</span>
-              <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2">Projetos entregues com sucesso</span>
-            </div>
-            <div className="flex flex-col items-center" data-stagger-item>
-              <span className="font-display text-[16px] leading-[24px] text-white tabular-nums" data-counter="400" data-prefix="R$" data-suffix=" mil +">R$400 mil +</span>
-              <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2 text-center">Movimentados em sistemas</span>
-            </div>
-            <div className="flex flex-col items-center col-span-2 md:col-span-1" data-stagger-item>
-              <span className="font-display text-[16px] leading-[24px] text-white tabular-nums" data-counter="3" data-suffix="+">3+</span>
-              <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2">Anos transformando processos</span>
-            </div>
-          </div>
+          <motion.div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-4 md:gap-0 divide-x-0 md:divide-x divide-white/[0.06]" {...staggerProps}>
+            <motion.div className="flex flex-col items-center" {...staggerItemProps}>
+              <span className="font-display text-[32px] leading-[40px] font-bold text-white tabular-nums" data-counter="20" data-suffix="+">20+</span>
+              <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2">{t('stats.projects')}</span>
+            </motion.div>
+            <motion.div className="flex flex-col items-center" {...staggerItemProps}>
+              <span className="font-display text-[32px] leading-[40px] font-bold text-white tabular-nums" data-counter="400" data-prefix="R$" data-suffix={language === 'en' ? 'k+' : ' mil +'}>R$400 mil +</span>
+              <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2 text-center">{t('stats.volume')}</span>
+            </motion.div>
+            <motion.div className="flex flex-col items-center col-span-2 md:col-span-1" {...staggerItemProps}>
+              <span className="font-display text-[32px] leading-[40px] font-bold text-white tabular-nums" data-counter="3" data-suffix="+">3+</span>
+              <span className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-white/40 mt-2">{t('stats.years')}</span>
+            </motion.div>
+          </motion.div>
         </section>
 
         {/* Services Section */}
         <section id="servicos" className="max-w-[1200px] mx-auto px-6 py-32 flex flex-col items-center">
-          <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white mb-16 text-center max-w-[768px]">
-            Não vendo projeto. Vendo resultado.
-          </h2>
+          <motion.h2 className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white mb-16 text-center max-w-[768px]" {...revealProps}>
+            {t('services.title')}
+          </motion.h2>
           
           <div ref={servicesGridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             {/* Service 1 */}
@@ -713,13 +811,13 @@ export default function App() {
                   <span className="font-mono text-[16px] text-white/30">01</span>
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mt-2">
-                  Sites que vendem
+                  {t('services.site.title')}
                 </h3>
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1">
-                  Landing pages, portfólios e lojas que convertem visitante em cliente. Visual premium, velocidade real.
+                  {t('services.site.body')}
                 </p>
-                <a href="https://wa.me/5574999835227?text=Olá,%20quero%20um%20site%20que%20venda" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4">
-                  Quero um site que venda <ArrowRight className="w-3.5 h-3.5" />
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.site.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4">
+                  {t('services.site.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </TiltCard>
@@ -733,13 +831,13 @@ export default function App() {
                   <span className="font-mono text-[16px] text-white/30">02</span>
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mt-2 relative z-10">
-                  Sistemas internos
+                  {t('services.systems.title')}
                 </h3>
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1 relative z-10">
-                  Dashboards, ERPs, CRMs e painéis que substituem planilha e WhatsApp. Operação que escala.
+                  {t('services.systems.body')}
                 </p>
-                <a href="https://wa.me/5574999835227?text=Olá,%20quero%20organizar%20minha%20operação%20com%20um%20sistema" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4 relative z-10">
-                  Quero organizar minha operação <ArrowRight className="w-3.5 h-3.5" />
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.systems.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4 relative z-10">
+                  {t('services.systems.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </TiltCard>
@@ -752,13 +850,13 @@ export default function App() {
                   <span className="font-mono text-[16px] text-white/30">03</span>
                 </div>
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mt-2">
-                  Automação & IA
+                  {t('services.automation.title')}
                 </h3>
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1">
-                  Processos repetitivos viram fluxos automáticos e IA integrada onde faz sentido. Já fiz bots, scraping e consultas em Python, mas meu foco é produto. Tempo de volta pra você.
+                  {t('services.automation.body')}
                 </p>
-                <a href="https://wa.me/5574999835227?text=Olá,%20quero%20automatizar%20processos%20no%20meu%20negócio" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4">
-                  Quero automatizar processos <ArrowRight className="w-3.5 h-3.5" />
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.automation.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4">
+                  {t('services.automation.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
             </TiltCard>
@@ -768,71 +866,71 @@ export default function App() {
         {/* Pain Points Section */}
         <section className="bg-brand-surface border-y border-white/[0.06] py-32 px-6">
           <div className="max-w-[1200px] mx-auto flex flex-col gap-16">
-            <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[729px]">
-              Meu trabalho entra quando o improviso para de funcionar.
-            </h2>
+            <motion.h2 className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[729px]" {...revealProps}>
+              {t('pain.title')}
+            </motion.h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8" data-stagger>
+            <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-8" {...staggerProps}>
               {/* Pain Point 1 */}
-              <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
+              <motion.div className="glass-card lift-card rounded-lg p-8 flex flex-col" {...staggerItemProps}>
                 <img src="/icons/3d/calculator.png" alt="" aria-hidden="true" width="80" height="80" loading="lazy" decoding="async" className="w-20 h-20 object-contain mb-4" />
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
-                  Negócio cresce, operação trava
+                  {t('pain.growth.title')}
                 </h3>
                 <p className="font-sans text-[16px] leading-[24px] text-white/50">
-                  Clientes chegam, tarefas aumentam e a equipe começa a perder tempo com controle manual retrabalho e falta de visibilidade.
+                  {t('pain.growth.body')}
                 </p>
-              </div>
+              </motion.div>
 
               {/* Pain Point 2 */}
-              <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
+              <motion.div className="glass-card lift-card rounded-lg p-8 flex flex-col" {...staggerItemProps}>
                 <img src="/icons/3d/chat-bubble.png" alt="" aria-hidden="true" width="80" height="80" loading="lazy" decoding="async" className="w-20 h-20 object-contain mb-4" />
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
-                  Tudo depende do WhatsApp
+                  {t('pain.whatsapp.title')}
                 </h3>
                 <p className="font-sans text-[16px] leading-[24px] text-white/50">
-                  Pedidos, pagamentos, aprovações e informações importantes ficam espalhados em conversas difíceis de controlar.
+                  {t('pain.whatsapp.body')}
                 </p>
-              </div>
+              </motion.div>
 
               {/* Pain Point 3 */}
-              <div className="glass-card lift-card rounded-lg p-8 flex flex-col" data-stagger-item>
+              <motion.div className="glass-card lift-card rounded-lg p-8 flex flex-col" {...staggerItemProps}>
                 <img src="/icons/3d/bulb.png" alt="" aria-hidden="true" width="80" height="80" loading="lazy" decoding="async" className="w-20 h-20 object-contain mb-4" />
                 <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-3">
-                  Ideia boa sem execução
+                  {t('pain.idea.title')}
                 </h3>
                 <p className="font-sans text-[16px] leading-[24px] text-white/50">
-                  Você sabe o que precisa construir, mas precisa de alguém que entenda o problema, organize o escopo e entregue funcionando.
+                  {t('pain.idea.body')}
                 </p>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
 
         {/* Portfolio Section */}
         <section id="projetos" className="bg-brand-surface border-y border-white/[0.06] pt-32 pb-20 px-6">
           <div className="max-w-[1200px] mx-auto flex flex-col gap-16">
-            <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white">
-              Projetos que deixaram marca.
-            </h2>
+            <motion.h2 className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white" {...revealProps}>
+              {t('projects.title')}
+            </motion.h2>
 
             {/* Bento Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8" data-stagger>
+            <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-8" {...staggerProps}>
               
               {/* Vet Anesthesia Pro */}
-              <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+              <motion.div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-hover-lift {...staggerItemProps}>
                 <div className="portfolio-media bg-[#0A1628] w-full flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/vet.png" alt="Vet Anesthesia Pro" width="1920" height="937" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 md:flex md:flex-col md:flex-grow">
                   <span className="font-mono text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
-                    SAAS · VETERINÁRIA
+                    {t('projects.vet.category')}
                   </span>
                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
                     Vet Anesthesia Pro
                   </h3>
                   <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
-                    Sistema de controlo anestésico para clínicas veterinárias. Substituiu fichas de papel.
+                    {t('projects.vet.body')}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React</span>
@@ -843,22 +941,22 @@ export default function App() {
                     vetanesthesiapro.com <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Nexo Delivery - Medium */}
-              <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+              <motion.div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-hover-lift {...staggerItemProps}>
                  <div className="portfolio-media bg-[#0F1A0A] w-full flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/nexo.webp" alt="Nexo Delivery" width="1024" height="1024" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
                  <div className="p-6 md:flex md:flex-col md:flex-grow">
                   <span className="font-mono text-[14px] md:text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
-                    PLATAFORMA · DELIVERY
+                    {t('projects.delivery.category')}
                   </span>
                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
                     Nexo Delivery
                   </h3>
                   <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
-                    Plataforma de gestão para serviços de entrega. Do pedido ao motoboy em tempo real.
+                    {t('projects.delivery.body')}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Next.js</span>
@@ -869,26 +967,26 @@ export default function App() {
                     nexodelivery.app <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
-              </div>
+              </motion.div>
 
               {/* GlowApp - Small */}
-              <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full relative" data-stagger-item data-hover-lift>
+              <motion.div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full relative" data-hover-lift {...staggerItemProps}>
                 <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm border border-white/[0.06] rounded-xl px-3 py-1 flex items-center gap-1.5 z-10 shadow-sm">
                    <div className="w-2.5 h-2.5 rounded-full bg-blue-300 border border-blue-900/10"></div>
-                   <span className="font-mono text-[12px] text-white/80">Cliente fora do Brasil</span>
+                   <span className="font-mono text-[12px] text-white/80">{t('projects.foreign')}</span>
                 </div>
                 <div className="portfolio-media bg-[#1A0A1A] w-full flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/glowapp.webp" alt="GlowApp" width="1254" height="1254" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 md:flex md:flex-col md:flex-grow">
                   <span className="font-mono text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
-                    APP · BELEZA
+                    {t('projects.glow.category')}
                   </span>
                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
                     GlowApp
                   </h3>
                   <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
-                    App de agendamento para salões de beleza com cliente internacional. Agendamentos que iam por DM, agora têm portal próprio.
+                    {t('projects.glow.body')}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React Native</span>
@@ -898,22 +996,22 @@ export default function App() {
                     yourglowapp.co <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
-              </div>
+              </motion.div>
 
                {/* AcheiCasa - Small */}
-               <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+               <motion.div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-hover-lift {...staggerItemProps}>
                 <div className="portfolio-media bg-[#0A1A14] w-full flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/acheicasa.webp" alt="AcheiCasa" width="1254" height="1254" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 md:flex md:flex-col md:flex-grow">
                   <span className="font-mono text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
-                    MARKETPLACE · IMÓVEIS
+                    {t('projects.home.category')}
                   </span>
                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
                     AcheiCasa.net
                   </h3>
                   <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
-                    Marketplace de imóveis com filtros geográficos e tour virtual. Conecta corretor e comprador.
+                    {t('projects.home.body')}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Next.js</span>
@@ -923,22 +1021,22 @@ export default function App() {
                     acheicasa.net <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
-              </div>
+               </motion.div>
 
                {/* AlugMotos - Small */}
-               <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+               <motion.div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-hover-lift {...staggerItemProps}>
                 <div className="portfolio-media bg-[#050A1A] w-full flex items-center justify-center shrink-0 overflow-hidden">
                   <img src="/alugmotos.webp" alt="AlugMotos" width="3481" height="3481" loading="lazy" decoding="async" sizes="(min-width: 768px) 384px, calc(100vw - 48px)" data-parallax-img className="portfolio-image w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 md:flex md:flex-col md:flex-grow">
                   <span className="font-mono text-[14px] md:text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
-                    SAAS · ALUGUEL DE MOTOS
+                    {t('projects.moto.category')}
                   </span>
                   <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
                     AlugMotos
                   </h3>
                   <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
-                    Sistema completo de gestão de reservas e frota de motos. Do checkout ao controle operacional em tempo real.
+                    {t('projects.moto.body')}
                   </p>
                   <div className="flex flex-wrap gap-2 mb-4">
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Angular</span>
@@ -948,43 +1046,43 @@ export default function App() {
                     alugmotos.com.br <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                  </div>
-               </div>
+               </motion.div>
 
                {/* EntregaBoy - Small */}
-               <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+               <motion.div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-hover-lift {...staggerItemProps}>
                  <div className="portfolio-media bg-[#111111] w-full flex items-center justify-center shrink-0 overflow-hidden">
                    <img src="/icons/entregaboy.png" alt="EntregaBoy" loading="lazy" decoding="async" className="w-32 h-32 object-contain" />
                  </div>
                  <div className="p-6 md:flex md:flex-col md:flex-grow">
                    <span className="font-mono text-[16px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
-                     PLATAFORMA · DELIVERY
+                      {t('projects.delivery.category')}
                    </span>
                     <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
                       EntregaBoy
                     </h3>
                     <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
-                      Plataforma de pedidos e entregas que conecta clientes, estabelecimentos e entregadores, simplificando a operação e acompanhando cada pedido em tempo real.
+                       {t('projects.eboy.body')}
                     </p>
                     <a href="https://entregaboy.com.br" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
                      entregaboy.com.br <ArrowRight className="w-3.5 h-3.5" />
                    </a>
                  </div>
-               </div>
+                </motion.div>
 
-               {/* AnunciCar */}
-               <div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-stagger-item data-hover-lift>
+                {/* AnunciCar */}
+                <motion.div className="portfolio-card lift-card glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg overflow-hidden md:flex md:flex-col md:h-full" data-hover-lift {...staggerItemProps}>
                   <div className="portfolio-media bg-[#0E3A44] w-full flex items-center justify-center shrink-0 overflow-hidden">
                     <img src="/icons/anuncicar.png" alt="AnunciCar" loading="lazy" decoding="async" data-parallax-img className="portfolio-image w-full h-full object-cover" />
                   </div>
                   <div className="p-6 md:flex md:flex-col md:flex-grow">
                     <span className="font-mono text-[14px] text-white/40 uppercase tracking-[1.6px] mb-2 leading-tight">
-                      PLATAFORMA + APP · MÍDIA OOH
+                       {t('projects.car.category')}
                     </span>
                     <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-1">
                       AnunciCar
                     </h3>
                     <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
-                      Plataforma e aplicativo de mídia OOH móvel que conecta marcas a motoristas, transformando veículos em canais de publicidade e criando novas oportunidades de renda.
+                       {t('projects.car.body')}
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">TanStack</span>
@@ -994,19 +1092,19 @@ export default function App() {
                       anuncicar.com <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
-               </div>
+                </motion.div>
 
-             </div>
+             </motion.div>
           </div>
         </section>
 
         {/* Testimonials Section */}
         <section className="bg-brand-surface border-y border-white/[0.06] pt-20 pb-32 px-6">
           <div className="max-w-[1200px] mx-auto flex flex-col gap-16">
-            <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[768px]">
-              Quem já trabalhou comigo.
-            </h2>
-            <div className={`marquee ${expandedTestimonial === null ? '' : 'marquee--paused'}`}>
+            <motion.h2 className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[768px]" {...revealProps}>
+              {t('testimonials.title')}
+            </motion.h2>
+            <div className={`marquee focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-lime ${expandedTestimonial === null ? '' : 'marquee--paused'}`} role="region" aria-label={t('testimonials.title')} tabIndex={0}>
               <div className="marquee__track" ref={marqueeTrackRef}>
                 {[0, 1].map((group) => (
                   <div
@@ -1018,9 +1116,10 @@ export default function App() {
                     {testimonialsData.map((t, i) => (
                       <TestimonialCard
                         key={`${group}-${i}`}
-                        text={t.text}
-                        project={t.project}
+                        text={translate(language, `testimonials.${i}.text`)}
+                        project={translate(language, `testimonials.${i}.project`)}
                         rating={t.rating}
+                        language={language}
                         index={i}
                         group={group}
                         expanded={expandedTestimonial === i}
@@ -1036,25 +1135,25 @@ export default function App() {
 
         {/* Mid-page CTA */}
         <section className="bg-brand-surface border-y border-white/[0.06] py-32 px-6">
-          <div className="max-w-[1200px] mx-auto flex flex-col items-center text-center" data-reveal>
+          <motion.div className="max-w-[1200px] mx-auto flex flex-col items-center text-center" {...revealProps}>
             <h2 className="font-display font-[700] text-[36px] md:text-[44px] leading-[1.15] tracking-[-0.8px] text-white max-w-[680px] mb-6">
-              Vamos tirar sua ideia do papel?
+              {t('cta.title')}
             </h2>
             <p className="font-sans text-[18px] leading-[32px] text-white/50 max-w-[560px] mb-10">
-              Uma conversa rápida no WhatsApp já define o que precisa ser feito. Sem compromisso, sem rodeio.
+              {t('cta.body')}
             </p>
-            <a href="https://wa.me/5574999835227?text=Olá,%20gostaria%20de%20falar%20sobre%20um%20projeto" target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-black rounded-xl px-10 py-5 flex items-center gap-3 hover:bg-brand-lime/90 transition-colors">
+            <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-black rounded-xl px-10 py-5 flex items-center gap-3 hover:bg-brand-lime/90 transition-colors">
               <WhatsAppIcon className="w-5 h-5 fill-current" />
-              <span className="font-mono text-[14px] font-bold uppercase tracking-[1.4px]">Falar no WhatsApp</span>
+              <span className="font-mono text-[14px] font-bold uppercase tracking-[1.4px]">{t('common.whatsapp')}</span>
             </a>
-          </div>
+          </motion.div>
         </section>
 
         {/* Process Section */}
         <section id="metodo" ref={methodSectionRef} className="max-w-[1200px] mx-auto px-6 py-32 flex flex-col lg:flex-row items-start gap-16 lg:gap-32">
-          <h2 data-reveal className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white w-full lg:w-[362px] shrink-0">
-            Simples.<br/>Direto.<br/>Entregue.
-          </h2>
+          <motion.h2 className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white w-full lg:w-[362px] shrink-0" {...revealProps}>
+            {t('method.title').split('|').map((word, index) => <React.Fragment key={word}>{index > 0 && <br />}{word}.</React.Fragment>)}
+          </motion.h2>
           
           <div className="relative pl-12 space-y-16 ml-2 lg:ml-0">
             <div className="absolute left-0 top-2 bottom-4 w-[2px] bg-white/[0.06]">
@@ -1062,52 +1161,52 @@ export default function App() {
             </div>
 
             {/* Step 1 */}
-            <div className="relative flex flex-col method-step">
+            <motion.div className="relative flex flex-col method-step" {...revealProps}>
               <div ref={step1Ref} className="absolute -left-[58px] top-1 w-6 h-6 rounded-full border-4 border-white/20 bg-black transition-colors duration-300" />
-              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-white/40 mb-2">Passo 01</span>
+              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-white/40 mb-2">{t('method.step', { number: '01' })}</span>
               <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-2">
-                Descubro o gargalo real
+                {t('method.discover.title')}
               </h3>
               <p className="font-sans text-[16px] leading-[26px] text-white/50">
-                Não começo a codar antes de entender o problema. Uma conversa rápida já define o que vai mudar o negócio de verdade.
+                {t('method.discover.body')}
               </p>
-            </div>
+            </motion.div>
 
              {/* Step 2 */}
-             <div className="relative flex flex-col method-step">
+             <motion.div className="relative flex flex-col method-step" {...revealProps}>
               <div ref={step2Ref} className="absolute -left-[58px] top-1 w-6 h-6 rounded-full border-4 border-white/20 bg-black transition-colors duration-300" />
-              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-white/40 mb-2">Passo 02</span>
+              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-white/40 mb-2">{t('method.step', { number: '02' })}</span>
               <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-2">
-                Construo rápido
+                {t('method.build.title')}
               </h3>
               <p className="font-sans text-[16px] leading-[26px] text-white/50">
-                Sem burocracia. MVP funcionando em dias, não meses. Você vê e testa real, não slide de apresentação.
+                {t('method.build.body')}
               </p>
-            </div>
+            </motion.div>
 
              {/* Step 3 */}
-             <div className="relative flex flex-col method-step">
+             <motion.div className="relative flex flex-col method-step" {...revealProps}>
               <div ref={step3Ref} className="absolute -left-[58px] top-1 w-6 h-6 rounded-full border-4 border-white/20 bg-black transition-colors duration-300" />
-              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-brand-lime mb-2">Passo 03</span>
+              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-brand-lime mb-2">{t('method.step', { number: '03' })}</span>
               <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-2">
-                Ajusto com dados reais
+                {t('method.adjust.title')}
               </h3>
               <p className="font-sans text-[16px] leading-[26px] text-white/50">
-                Depois do lançamento o trabalho continua. Analiso o que funciona e ajusto. Entrego resultado, não código.
+                {t('method.adjust.body')}
               </p>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Contact Section */}
         <section id="contato" className="bg-brand-surface border-t border-white/[0.06] py-32 px-6">
           <div className="max-w-[1200px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-32">
-            <div className="flex flex-col flex-1" data-reveal>
+            <motion.div className="flex flex-col flex-1" {...revealProps}>
               <h2 className="font-display font-[800] text-[48px] md:text-[64px] leading-[1.1] tracking-[-2.56px] text-white mb-6">
-                Tem uma ideia para tirar do papel?
+                {t('contact.title')}
               </h2>
               <p className="font-sans text-[18px] leading-[32px] text-white/50 mb-8 max-w-[568px]">
-                Me chame no WhatsApp e eu te ajudo a transformar sua ideia ou processo travado em uma solução simples, funcional e pronta para uso.
+                {t('contact.body')}
               </p>
               
               <div className="flex flex-col gap-6">
@@ -1118,39 +1217,39 @@ export default function App() {
                   </span>
                 </a>
                 
-                <a href="https://wa.me/5574999835227?text=Olá,%20gostaria%20de%20falar%20sobre%20um%20projeto" target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
+                <a href={whatsappUrl} target="_blank" rel="noreferrer" className="flex items-center gap-4 group">
                   <WhatsAppIcon className="w-11 h-11 text-white fill-current group-hover:scale-110 transition-transform" />
                   <span className="font-sans font-medium text-[16px] text-white/70 group-hover:underline">
-                    Falar no WhatsApp
+                    {t('common.whatsapp')}
                   </span>
                 </a>
               </div>
-            </div>
+            </motion.div>
 
             {/* Contact Card */}
-            <div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-12 flex flex-col items-center flex-1 max-w-[632px]" data-reveal data-hover-lift>
+            <motion.div className="glass-card shadow-[0_4px_20px_rgba(0,0,0,0.3)] rounded-lg p-12 flex flex-col items-center flex-1 max-w-[632px]" data-hover-lift {...revealProps}>
               <img src="/icons/3d/flash.png" alt="" aria-hidden="true" width="112" height="112" loading="lazy" decoding="async" className="w-28 h-28 object-contain mb-4" />
               <h3 className="font-display font-[400] text-[16px] leading-[24px] text-white text-center mb-4">
-                Pronto para começar?
+                {t('contact.ready')}
               </h3>
               <p className="font-sans text-[16px] leading-[24px] text-white/50 text-center max-w-[476px] mb-8">
-                Mande uma mensagem direta no WhatsApp para uma resposta mais rápida e alinhamento do seu projeto.
+                {t('contact.cardBody')}
               </p>
-              <a href="https://wa.me/5574999835227?text=Olá,%20gostaria%20de%20falar%20sobre%20um%20projeto" target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-black w-full rounded py-4 flex items-center justify-center font-mono text-[13px] font-bold tracking-[1.3px] uppercase hover:bg-brand-lime/90 transition-colors">
-                Iniciar Conversa
+              <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-black w-full rounded py-4 flex items-center justify-center font-mono text-[13px] font-bold tracking-[1.3px] uppercase hover:bg-brand-lime/90 transition-colors">
+                {t('contact.start')}
               </a>
-            </div>
+            </motion.div>
           </div>
         </section>
       </main>
 
       {/* Floating WhatsApp - mobile only */}
       <a
-        href="https://wa.me/5574999835227?text=Olá,%20gostaria%20de%20falar%20sobre%20um%20projeto"
+        href={whatsappUrl}
         target="_blank"
         rel="noreferrer"
         className="fixed bottom-6 right-6 z-50 md:hidden bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_8px_24px_rgba(0,0,0,0.20)] hover:scale-110 active:scale-95 transition-all duration-200"
-        aria-label="Falar no WhatsApp"
+        aria-label={t('common.whatsapp')}
       >
         <WhatsAppIcon className="w-7 h-7 fill-current" />
       </a>
@@ -1161,7 +1260,7 @@ export default function App() {
         className={`fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/[0.06] shadow-[0_4px_16px_rgba(0,0,0,0.3)] flex items-center justify-center text-white/50 hover:text-white hover:bg-white/15 transition-all duration-300 ${
           showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
-        aria-label="Voltar ao topo"
+        aria-label={t('common.backToTop')}
       >
         <ArrowUp className="w-5 h-5" strokeWidth={2} />
       </button>
