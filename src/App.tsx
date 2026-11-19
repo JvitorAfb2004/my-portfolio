@@ -109,7 +109,7 @@ function StarRating({ rating }: { rating: number }) {
         {Array.from({ length: 5 }, (_, i) => (
           <Star
             key={i}
-            className={`w-4 h-4 ${i < stars ? 'fill-brand-lime text-brand-lime' : 'text-white/15'}`}
+            className={`w-4 h-4 ${i < stars ? 'fill-brand-accent text-brand-accent' : 'text-white/15'}`}
             strokeWidth={1.5}
           />
         ))}
@@ -182,7 +182,7 @@ function TestimonialCard({
           onClick={onToggle}
           aria-expanded={expanded}
           aria-controls={textId}
-          className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-brand-lime hover:text-brand-lime/70 transition-colors mt-1.5 py-1.5 self-start"
+          className="font-mono text-[13px] uppercase tracking-[1.3px] font-medium text-brand-accent hover:text-brand-accent/70 transition-colors mt-1.5 py-1.5 self-start"
         >
           {translate(language, expanded ? 'testimonials.readLess' : 'testimonials.readMore')}
         </button>
@@ -546,8 +546,8 @@ export default function App() {
           const dot = stepDots[i];
           if (dot) {
             tl.to(dot, {
-              borderColor: '#BEF500',
-              boxShadow: '0 0 0 6px rgba(190, 245, 0, 0.18)',
+              borderColor: '#7A1F2B',
+              boxShadow: '0 0 0 6px rgba(122, 31, 43, 0.18)',
               scale: 1.18,
               duration: 0.16,
               yoyo: true,
@@ -641,12 +641,12 @@ export default function App() {
   };
 
   return (
-    <div ref={rootRef} className="min-h-screen bg-brand-bg font-sans selection:bg-brand-lime selection:text-black relative z-10">
+    <div ref={rootRef} className="min-h-screen bg-brand-bg font-sans selection:bg-brand-accent selection:text-black relative z-10">
       {/* Glow orbs */}
       <div aria-hidden="true" className="fixed pointer-events-none inset-0 z-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-brand-lime/[0.05] blur-[120px]" style={{ mixBlendMode: 'screen' as React.CSSProperties['mixBlendMode'] }} />
-        <div className="absolute top-[40%] -left-40 w-[500px] h-[500px] rounded-full bg-brand-lime/[0.04] blur-[120px]" style={{ mixBlendMode: 'screen' as React.CSSProperties['mixBlendMode'] }} />
-        <div className="absolute bottom-0 right-[20%] w-[400px] h-[400px] rounded-full bg-brand-lime/[0.03] blur-[100px]" style={{ mixBlendMode: 'screen' as React.CSSProperties['mixBlendMode'] }} />
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-brand-accent/[0.05] blur-[120px]" style={{ mixBlendMode: 'screen' as React.CSSProperties['mixBlendMode'] }} />
+        <div className="absolute top-[40%] -left-40 w-[500px] h-[500px] rounded-full bg-brand-accent/[0.04] blur-[120px]" style={{ mixBlendMode: 'screen' as React.CSSProperties['mixBlendMode'] }} />
+        <div className="absolute bottom-0 right-[20%] w-[400px] h-[400px] rounded-full bg-brand-accent/[0.03] blur-[100px]" style={{ mixBlendMode: 'screen' as React.CSSProperties['mixBlendMode'] }} />
       </div>
       <div className="crosshair-cursor" aria-hidden="true">
         <svg ref={cursorHorizontalRef} className="crosshair-cursor__line crosshair-cursor__line--horizontal" viewBox="0 0 200 20" preserveAspectRatio="none">
@@ -686,7 +686,7 @@ export default function App() {
           <nav ref={navRef} className="hidden md:flex items-center gap-6 relative">
             <div 
               ref={indicatorRef} 
-              className="absolute bottom-0 h-[2px] bg-brand-lime"
+              className="absolute bottom-0 h-[2px] bg-brand-accent"
               style={{ left: 0, width: 0 }}
             />
             <a href="#servicos" data-section="servicos" onClick={(e) => handleNavClick(e, 'servicos')} className={`pb-1 font-mono text-[13px] font-bold tracking-[0.65px] transition-colors ${activeSection === 'servicos' ? 'text-white' : 'text-white/50 hover:text-white'}`}>{t('nav.services')}</a>
@@ -703,7 +703,7 @@ export default function App() {
               aria-expanded={showLanguageMenu}
               aria-controls="language-menu"
               onClick={() => setShowLanguageMenu((open) => !open)}
-              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/70 px-2 py-2 text-[11px] text-white transition-colors hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-lime md:gap-2 md:px-3 md:text-sm"
+              className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/70 px-2 py-2 text-[11px] text-white transition-colors hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent md:gap-2 md:px-3 md:text-sm"
             >
               <LanguageFlag language={language} />
               <span>{language}</span>
@@ -743,7 +743,7 @@ export default function App() {
             )}
             </AnimatePresence>
           </div>
-          <a href="#contato" onClick={(e) => handleNavClick(e, 'contato')} className="bg-brand-lime text-black px-3 py-2 md:px-6 md:py-3 rounded-full font-mono text-[11px] md:text-[13px] font-medium tracking-[0.65px] hover:bg-brand-lime/90 transition-colors">
+          <a href="#contato" onClick={(e) => handleNavClick(e, 'contato')} className="bg-brand-accent text-black px-3 py-2 md:px-6 md:py-3 rounded-full font-mono text-[11px] md:text-[13px] font-medium tracking-[0.65px] hover:bg-brand-accent/90 transition-colors">
             {t('nav.cta')}
           </a>
           </div>
@@ -767,7 +767,7 @@ export default function App() {
             {t('hero.subtitle')}
             </p>
           <div data-hero-cta className="flex flex-col sm:flex-row items-center gap-4">
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-[#151F00] shadow-sm rounded-xl px-8 py-4 flex items-center gap-2 hover:bg-brand-lime/90 transition-colors">
+            <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-accent text-black shadow-sm rounded-xl px-8 py-4 flex items-center gap-2 hover:bg-brand-accent/90 transition-colors">
               <WhatsAppIcon className="w-5 h-5 fill-current" />
               <span className="font-mono text-[13px] font-bold uppercase tracking-[1.3px]">{t('common.whatsapp')}</span>
             </a>
@@ -816,7 +816,7 @@ export default function App() {
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1">
                   {t('services.site.body')}
                 </p>
-                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.site.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4">
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.site.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent transition-colors mt-auto pt-4">
                   {t('services.site.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -824,8 +824,8 @@ export default function App() {
 
             {/* Service 2 */}
             <TiltCard className="h-full">
-              <div className="glass-card shadow-[0_0_0_1px_rgba(190,245,0,0.15)] rounded-lg p-8 flex flex-col items-start gap-3 relative overflow-hidden group h-full">
-                <div className="absolute -top-16 -right-16 w-40 h-40 bg-brand-lime/[0.10] rounded-full blur-2xl -z-0" />
+              <div className="glass-card shadow-[0_0_0_1px_rgba(122,31,43,0.15)] rounded-lg p-8 flex flex-col items-start gap-3 relative overflow-hidden group h-full">
+                <div className="absolute -top-16 -right-16 w-40 h-40 bg-brand-accent/[0.10] rounded-full blur-2xl -z-0" />
                 <div className="flex items-start justify-between w-full mb-2 relative z-10">
                   <img src="/icons/3d/chart.png" alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async" className="w-24 h-24 object-contain" />
                   <span className="font-mono text-[16px] text-white/30">02</span>
@@ -836,7 +836,7 @@ export default function App() {
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1 relative z-10">
                   {t('services.systems.body')}
                 </p>
-                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.systems.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4 relative z-10">
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.systems.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent transition-colors mt-auto pt-4 relative z-10">
                   {t('services.systems.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -855,7 +855,7 @@ export default function App() {
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1">
                   {t('services.automation.body')}
                 </p>
-                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.automation.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-lime transition-colors mt-auto pt-4">
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.automation.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent transition-colors mt-auto pt-4">
                   {t('services.automation.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -937,7 +937,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Node.js</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">PostgreSQL</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
                     vetanesthesiapro.com <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -963,7 +963,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Prisma</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Socket.io</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
                     nexodelivery.app <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -992,7 +992,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React Native</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Firebase</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
                     yourglowapp.co <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -1017,7 +1017,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Next.js</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Maps API</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
                     acheicasa.net <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -1042,7 +1042,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Angular</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Node.js</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
                     alugmotos.com.br <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                  </div>
@@ -1063,7 +1063,7 @@ export default function App() {
                     <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
                        {t('projects.eboy.body')}
                     </p>
-                    <a href="https://entregaboy.com.br" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                    <a href="https://entregaboy.com.br" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
                      entregaboy.com.br <ArrowRight className="w-3.5 h-3.5" />
                    </a>
                  </div>
@@ -1088,7 +1088,7 @@ export default function App() {
                       <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">TanStack</span>
                       <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React Native</span>
                     </div>
-                    <a href="https://anuncicar.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-lime transition-colors mt-4 md:mt-auto">
+                    <a href="https://anuncicar.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
                       anuncicar.com <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
@@ -1104,7 +1104,7 @@ export default function App() {
             <motion.h2 className="font-display font-[700] text-[40px] leading-[48px] tracking-[-0.8px] text-white max-w-[768px]" {...revealProps}>
               {t('testimonials.title')}
             </motion.h2>
-            <div className={`marquee focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-lime ${expandedTestimonial === null ? '' : 'marquee--paused'}`} role="region" aria-label={t('testimonials.title')} tabIndex={0}>
+            <div className={`marquee focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-accent ${expandedTestimonial === null ? '' : 'marquee--paused'}`} role="region" aria-label={t('testimonials.title')} tabIndex={0}>
               <div className="marquee__track" ref={marqueeTrackRef}>
                 {[0, 1].map((group) => (
                   <div
@@ -1142,7 +1142,7 @@ export default function App() {
             <p className="font-sans text-[18px] leading-[32px] text-white/50 max-w-[560px] mb-10">
               {t('cta.body')}
             </p>
-            <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-black rounded-xl px-10 py-5 flex items-center gap-3 hover:bg-brand-lime/90 transition-colors">
+            <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-accent text-black rounded-xl px-10 py-5 flex items-center gap-3 hover:bg-brand-accent/90 transition-colors">
               <WhatsAppIcon className="w-5 h-5 fill-current" />
               <span className="font-mono text-[14px] font-bold uppercase tracking-[1.4px]">{t('common.whatsapp')}</span>
             </a>
@@ -1157,7 +1157,7 @@ export default function App() {
           
           <div className="relative pl-12 space-y-16 ml-2 lg:ml-0">
             <div className="absolute left-0 top-2 bottom-4 w-[2px] bg-white/[0.06]">
-              <div ref={timelineLineRef} className="w-full bg-brand-lime" style={{ height: "0%" }} />
+              <div ref={timelineLineRef} className="w-full bg-brand-accent" style={{ height: "0%" }} />
             </div>
 
             {/* Step 1 */}
@@ -1187,7 +1187,7 @@ export default function App() {
              {/* Step 3 */}
              <motion.div className="relative flex flex-col method-step" {...revealProps}>
               <div ref={step3Ref} className="absolute -left-[58px] top-1 w-6 h-6 rounded-full border-4 border-white/20 bg-black transition-colors duration-300" />
-              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-brand-lime mb-2">{t('method.step', { number: '03' })}</span>
+              <span className="font-mono text-[13px] font-medium uppercase tracking-[1.3px] text-brand-accent mb-2">{t('method.step', { number: '03' })}</span>
               <h3 className="font-display font-[600] text-[24px] leading-[31px] tracking-[-0.24px] text-white mb-2">
                 {t('method.adjust.title')}
               </h3>
@@ -1235,7 +1235,7 @@ export default function App() {
               <p className="font-sans text-[16px] leading-[24px] text-white/50 text-center max-w-[476px] mb-8">
                 {t('contact.cardBody')}
               </p>
-              <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-lime text-black w-full rounded py-4 flex items-center justify-center font-mono text-[13px] font-bold tracking-[1.3px] uppercase hover:bg-brand-lime/90 transition-colors">
+              <a href={whatsappUrl} target="_blank" rel="noreferrer" data-hover-lift className="bg-brand-accent text-black w-full rounded py-4 flex items-center justify-center font-mono text-[13px] font-bold tracking-[1.3px] uppercase hover:bg-brand-accent/90 transition-colors">
                 {t('contact.start')}
               </a>
             </motion.div>

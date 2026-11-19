@@ -4,19 +4,19 @@
   --font-sans: "Inter", sans-serif;
   --font-display: "Plus Jakarta Sans", sans-serif;
   --font-mono: "Inter", sans-serif;
-  --color-brand-lime: #BEF500;
-  --color-brand-bg: #F7F7F5;
+  --color-brand-accent: #7A1F2B;
+  --color-brand-bg: #E7E3DC;
   --color-brand-surface: #FFFFFF;
-  --color-brand-border: rgba(17, 17, 17, 0.10);
+  --color-brand-border: rgba(20, 33, 61, 0.10);
   --color-brand-gray: #555555;
   --color-brand-light-gray: #777777;
-  --color-white: #111111;
+  --color-white: #14213D;
   --color-black: #FFFFFF;
 }
 
 body {
-  background-color: #F7F7F5;
-  color: #111;
+  background-color: #E7E3DC;
+  color: #14213D;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -26,7 +26,7 @@ body::before {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: radial-gradient(rgba(17, 17, 17, 0.35) 1px, transparent 0);
+  background-image: radial-gradient(rgba(20, 33, 61, 0.35) 1px, transparent 0);
   background-size: 24px 24px;
   opacity: 0.04;
   mix-blend-mode: multiply;
@@ -38,22 +38,22 @@ body::before {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F7F7F5;
+  background: #E7E3DC;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(17, 17, 17, 0.20);
-  border: 2px solid #F7F7F5;
+  background: rgba(20, 33, 61, 0.20);
+  border: 2px solid #E7E3DC;
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(17, 17, 17, 0.35);
+  background: rgba(20, 33, 61, 0.35);
 }
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: rgba(17, 17, 17, 0.20) #F7F7F5;
+  scrollbar-color: rgba(20, 33, 61, 0.20) #E7E3DC;
 }
 
 .crosshair-cursor {
@@ -62,7 +62,7 @@ html {
 
 @media (any-pointer: fine) {
   .crosshair-cursor {
-    --cursor-stroke: rgba(17, 17, 17, 0.20);
+    --cursor-stroke: rgba(20, 33, 61, 0.20);
     --cursor-stroke-width: 1px;
     position: fixed;
     inset: 0;
@@ -110,7 +110,7 @@ html {
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(17, 17, 17, 0.10);
+  border: 1px solid rgba(20, 33, 61, 0.10);
   box-shadow: none !important;
 }
 
@@ -233,8 +233,8 @@ button:active,
 
 .lift-card:hover {
   transform: translateY(-6px) !important;
-  border-color: rgba(190, 245, 0, 0.45);
-  box-shadow: 0 16px 40px rgba(17, 17, 17, 0.10) !important;
+  border-color: rgba(122, 31, 43, 0.45);
+  box-shadow: 0 16px 40px rgba(20, 33, 61, 0.10) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
