@@ -676,7 +676,7 @@ export default function App() {
         style={shouldReduceMotion ? undefined : { width: headerWidth }}
         className={`sticky z-50 mx-auto flex justify-center px-0 transition-[top] duration-300 ${compactHeader ? 'top-4' : 'top-0'}`}
       >
-        <div className={`flex h-20 w-full items-center justify-between border border-white/[0.06] bg-black/70 px-3 backdrop-blur-md transition-[border-radius,box-shadow] duration-300 sm:px-6 ${compactHeader ? 'rounded-full shadow-lg' : 'rounded-none border-x-0 border-t-0'}`}>
+        <div className={`flex h-20 w-full items-center justify-between border border-white/[0.06] bg-black/70 px-3 backdrop-blur-md transition-[border-radius,box-shadow] duration-300 sm:px-6 ${compactHeader ? 'rounded-full shadow-lg' : 'rounded-b-2xl border-x-0 border-t-0'}`}>
           <div className="flex items-center gap-1 font-display font-bold text-2xl tracking-tight text-white">
             JVITOR
             <span className="hidden font-mono text-[13px] uppercase tracking-[1.3px] font-normal text-white/50 mt-1 ml-1 sm:inline">
@@ -752,7 +752,7 @@ export default function App() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative isolate mx-auto flex max-w-[1200px] flex-col items-center px-6 pt-12 pb-16 text-center md:pt-16 md:pb-24">
+        <section className="relative isolate mx-auto flex min-h-[calc(100svh_-_5rem)] max-w-[1200px] flex-col items-center justify-center px-6 pt-12 pb-16 text-center md:pt-16 md:pb-24">
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 select-none overflow-hidden text-black/[0.06]">
             <Code2 className="absolute left-[8%] top-[12%] h-14 w-14 -rotate-12" strokeWidth={1.25} />
             <Languages className="absolute right-[9%] top-[22%] h-16 w-16 rotate-6" strokeWidth={1.1} />
