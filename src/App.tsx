@@ -546,8 +546,8 @@ export default function App() {
           const dot = stepDots[i];
           if (dot) {
             tl.to(dot, {
-              borderColor: '#7A1F2B',
-              boxShadow: '0 0 0 6px rgba(122, 31, 43, 0.18)',
+              borderColor: '#14213D',
+              boxShadow: '0 0 0 6px rgba(20, 33, 61, 0.18)',
               scale: 1.18,
               duration: 0.16,
               yoyo: true,
@@ -816,7 +816,7 @@ export default function App() {
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1">
                   {t('services.site.body')}
                 </p>
-                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.site.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent transition-colors mt-auto pt-4">
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.site.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-auto pt-4">
                   {t('services.site.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -824,7 +824,7 @@ export default function App() {
 
             {/* Service 2 */}
             <TiltCard className="h-full">
-              <div className="glass-card shadow-[0_0_0_1px_rgba(122,31,43,0.15)] rounded-lg p-8 flex flex-col items-start gap-3 relative overflow-hidden group h-full">
+              <div className="glass-card shadow-[0_0_0_1px_rgba(20,33,61,0.15)] rounded-lg p-8 flex flex-col items-start gap-3 relative overflow-hidden group h-full">
                 <div className="absolute -top-16 -right-16 w-40 h-40 bg-brand-accent/[0.10] rounded-full blur-2xl -z-0" />
                 <div className="flex items-start justify-between w-full mb-2 relative z-10">
                   <img src="/icons/3d/chart.png" alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async" className="w-24 h-24 object-contain" />
@@ -836,7 +836,7 @@ export default function App() {
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1 relative z-10">
                   {t('services.systems.body')}
                 </p>
-                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.systems.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent transition-colors mt-auto pt-4 relative z-10">
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.systems.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-auto pt-4 relative z-10">
                   {t('services.systems.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -855,7 +855,7 @@ export default function App() {
                 <p className="font-sans text-[16px] leading-[26px] text-white/50 mt-1">
                   {t('services.automation.body')}
                 </p>
-                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.automation.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent transition-colors mt-auto pt-4">
+                <a href={`https://wa.me/5574999835227?text=${encodeURIComponent(t('services.automation.cta'))}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[14px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-auto pt-4">
                   {t('services.automation.cta')} <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -937,7 +937,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Node.js</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">PostgreSQL</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-4 md:mt-auto">
                     vetanesthesiapro.com <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -963,7 +963,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Prisma</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Socket.io</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-4 md:mt-auto">
                     nexodelivery.app <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -992,7 +992,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React Native</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Firebase</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-4 md:mt-auto">
                     yourglowapp.co <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -1017,7 +1017,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Next.js</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Maps API</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-4 md:mt-auto">
                     acheicasa.net <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -1042,7 +1042,7 @@ export default function App() {
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Angular</span>
                     <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">Node.js</span>
                   </div>
-                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
+                  <a href="#" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-4 md:mt-auto">
                     alugmotos.com.br <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                  </div>
@@ -1063,7 +1063,7 @@ export default function App() {
                     <p className="font-sans text-[16px] leading-[26px] text-white/50 mb-4 md:flex-grow">
                        {t('projects.eboy.body')}
                     </p>
-                    <a href="https://entregaboy.com.br" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
+                    <a href="https://entregaboy.com.br" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-4 md:mt-auto">
                      entregaboy.com.br <ArrowRight className="w-3.5 h-3.5" />
                    </a>
                  </div>
@@ -1088,7 +1088,7 @@ export default function App() {
                       <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">TanStack</span>
                       <span className="bg-white/[0.06] text-white/70 font-mono text-[13px] font-medium px-3 py-1 rounded-full tracking-[0.65px]">React Native</span>
                     </div>
-                    <a href="https://anuncicar.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent transition-colors mt-4 md:mt-auto">
+                    <a href="https://anuncicar.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-mono text-[16px] font-medium text-white hover:text-brand-accent/70 transition-colors mt-4 md:mt-auto">
                       anuncicar.com <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>

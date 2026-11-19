@@ -4,7 +4,7 @@
   --font-sans: "Inter", sans-serif;
   --font-display: "Plus Jakarta Sans", sans-serif;
   --font-mono: "Inter", sans-serif;
-  --color-brand-accent: #7A1F2B;
+  --color-brand-accent: #14213D;
   --color-brand-bg: #E7E3DC;
   --color-brand-surface: #FFFFFF;
   --color-brand-border: rgba(20, 33, 61, 0.10);
@@ -233,7 +233,7 @@ button:active,
 
 .lift-card:hover {
   transform: translateY(-6px) !important;
-  border-color: rgba(122, 31, 43, 0.45);
+  border-color: rgba(20, 33, 61, 0.45);
   box-shadow: 0 16px 40px rgba(20, 33, 61, 0.10) !important;
 }
 
